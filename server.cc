@@ -260,39 +260,47 @@ class ShapeDetectionService final : public ShapeDetection::Service {
 
       dlib::frontal_face_detector detector = dlib::get_frontal_face_detector();
 
-      Point *point = response->add_points();
-      
-      if (request->has_image()) {
-        inference::Image image = request->image();
-        std::string content = image.content();
+      if (!request->has_image()) {
+        return grpc::Status(grpc::INVALID_ARGUMENT, "image is required.");
+      }
 
-        auto loader = JpegLoader();
-        loader.ReadImage(content);
+      inference::Image image = request->image();
+      std::string content = image.content();
 
-        dlib::array2d<dlib::rgb_pixel> img;
-        loader.GetImage(img);
+      auto loader = JpegLoader();
+      loader.ReadImage(content);
 
-        dlib::pyramid_up(img);
+      dlib::array2d<dlib::rgb_pixel> img;
+      loader.GetImage(img);
 
-        // Now tell the face detector to give us a list of bounding boxes
-        // around all the faces in the image.
-        std::vector<dlib::rectangle> dets = detector(img);
+      dlib::pyramid_up(img);
 
-        // Now we will go ask the shape_predictor to tell us the pose of
-        // each face we detected.
-        std::vector<dlib::full_object_detection> shapes;
-        for (unsigned long j = 0; j < dets.size(); ++j)
-        {
-            dlib::full_object_detection shape = sp_(img, dets[j]);
-            std::cout << "number of parts: "<< shape.num_parts() << std::endl;
-            std::cout << "pixel position of first part:  " << shape.part(0) << std::endl;
-            std::cout << "pixel position of second part: " << shape.part(1) << std::endl;
-            // You get the idea, you can get all the face part locations if
-            // you want them.  Here we just store them in shapes so we can
-            // put them on the screen.
-            shapes.push_back(shape);
-        }
+      // Now tell the face detector to give us a list of bounding boxes
+      // around all the faces in the image.
+      std::vector<dlib::rectangle> dets = detector(img);
 
+      // Now we will go ask the shape_predictor to tell us the pose of
+      // each face we detected.
+      std::vector<dlib::full_object_detection> shapes;
+      for (unsigned long j = 0; j < dets.size(); ++j)
+      {
+          dlib::full_object_detection shape = sp_(img, dets[j]);
+          std::cout << "number of parts: "<< shape.num_parts() << std::endl;
+          std::cout << "pixel position of first part:  " << shape.part(0) << std::endl;
+          std::cout << "pixel position of second part: " << shape.part(1) << std::endl;
+
+          for (unsigned long pi = 0; pi < shape.num_parts(); ++pi) {
+            dlib::point part = shape.part(pi);
+
+            Point *point = response->add_points();
+            point->set_x(part.x());
+            point->set_y(part.y());
+          }
+
+          // You get the idea, you can get all the face part locations if
+          // you want them.  Here we just store them in shapes so we can
+          // put them on the screen.
+          shapes.push_back(shape);
       }
 
       return Status::OK;
@@ -313,89 +321,37 @@ class ObjectDetectionService final : public ObjectDetection::Service {
     detector_ = dlib::get_frontal_face_detector();
   }
 
-  /*
-  Status GetFeature(ServerContext* context, const Point* point,
-                    Feature* feature) override {
-
-    feature->set_name(GetFeatureName(*point, feature_list_));
-    feature->mutable_location()->CopyFrom(*point);
-    return Status::OK;
-  }
-  */
-
-  /*
-  Status ListFeatures(ServerContext* context,
-                      const inference::Rectangle* rectangle,
-                      ServerWriter<Feature>* writer) override {
-
-    auto lo = rectangle->lo();
-    auto hi = rectangle->hi();
-    long left = (std::min)(lo.longitude(), hi.longitude());
-    long right = (std::max)(lo.longitude(), hi.longitude());
-    long top = (std::max)(lo.latitude(), hi.latitude());
-    long bottom = (std::min)(lo.latitude(), hi.latitude());
-    for (const Feature& f : feature_list_) {
-      if (f.location().longitude() >= left &&
-          f.location().longitude() <= right &&
-          f.location().latitude() >= bottom &&
-          f.location().latitude() <= top) {
-        writer->Write(f);
-      }
+  Status DetectObjects(ServerContext* context, const DetectionRequest* request, ServerWriter<Rectangle>* writer) {
+    if (!request->has_image()) {
+      return grpc::Status(grpc::INVALID_ARGUMENT, "image is required.");
     }
-    return Status::OK;
-  }
-  */
 
-  /*
-  Status RecordRoute(ServerContext* context, ServerReader<Point>* reader,
-                     RouteSummary* summary) override {
-    Point point;
-    int point_count = 0;
-    int feature_count = 0;
-    float distance = 0.0;
-    Point previous;
+    inference::Image image = request->image();
+    std::string content = image.content();
 
-    system_clock::time_point start_time = system_clock::now();
-    while (reader->Read(&point)) {
-      point_count++;
-      if (!GetFeatureName(point, feature_list_).empty()) {
-        feature_count++;
-      }
-      if (point_count != 1) {
-        distance += GetDistance(previous, point);
-      }
-      previous = point;
-    }
-    system_clock::time_point end_time = system_clock::now();
-    summary->set_point_count(point_count);
-    summary->set_feature_count(feature_count);
-    summary->set_distance(static_cast<long>(distance));
-    auto secs = std::chrono::duration_cast<std::chrono::seconds>(
-        end_time - start_time);
-    summary->set_elapsed_time(secs.count());
-    return Status::OK;
-  }
-  */
+    auto loader = JpegLoader();
+    loader.ReadImage(content);
 
-  /*
-  Status RouteChat(ServerContext* context,
-                   ServerReaderWriter<RouteNote, RouteNote>* stream) override {
+    dlib::array2d<dlib::rgb_pixel> img;
+    loader.GetImage(img);
 
-    std::vector<RouteNote> received_notes;
-    RouteNote note;
-    while (stream->Read(&note)) {
-      for (const RouteNote& n : received_notes) {
-        if (n.location().latitude() == note.location().latitude() &&
-            n.location().longitude() == note.location().longitude()) {
-          stream->Write(n);
-        }
-      }
-      received_notes.push_back(note);
+    dlib::pyramid_up(img);
+
+    // Now tell the face detector to give us a list of bounding boxes
+    // around all the faces in the image.
+    std::vector<dlib::rectangle> dets = detector_(img);
+
+    for (auto det : dets) {
+      auto rect = Rectangle();
+      rect.set_x(det.left());
+      rect.set_y(det.top());
+      rect.set_width(det.width());
+      rect.set_height(det.height());
+      writer->Write(rect);
     }
 
     return Status::OK;
   }
-  */
 
  private:
   dlib::frontal_face_detector detector_;
