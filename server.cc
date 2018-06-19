@@ -105,10 +105,9 @@ public:
     unsigned char *jpg_buffer = uchrs;
     jpeg_mem_src(&cinfo, jpg_buffer, jpg_size);
 
-    int rc;
-    rc = jpeg_read_header(&cinfo, TRUE);
+    int rc = jpeg_read_header(&cinfo, TRUE);
     if (rc != 1) {
-      return;
+      throw std::runtime_error("jpeg: decode failed");
       // return grpc::Status(grpc::INVALID_ARGUMENT, "jpeg decode failed");
     }
     jpeg_start_decompress(&cinfo);
@@ -116,14 +115,12 @@ public:
     width_ = cinfo.output_width;
     height_ = cinfo.output_height;
 
-    int pixel_size = cinfo.output_components;
-
     if (output_components_ != 1 && 
         output_components_ != 3 &&
         output_components_ != 4)
     {
       jpeg_destroy_decompress(&cinfo);
-      return;
+      throw std::runtime_error("jpeg: unsupported number of colors");
       // return grpc::Status(grpc::INVALID_ARGUMENT, "jpeg: unsupported number of colors");
       // std::ostringstream sout;
       // sout << "jpeg_loader: Unsupported number of colors (" << output_components_ << ") in file " << filename;
@@ -151,7 +148,7 @@ public:
   }
 
   template<typename T>
-  void get_image(T &t_) const
+  void GetImage(T &t_) const
   {
 
     dlib::image_view<T> t(t_);
@@ -255,92 +252,55 @@ class ShapeDetectionService final : public ShapeDetection::Service {
   public:
     explicit ShapeDetectionService(const std::string& model_file) {
       model_file_ = model_file;
+      sp_ = dlib::shape_predictor();
+      dlib::deserialize(model_file_) >> sp_;
     }
 
     Status DetectShape(ServerContext* context, DetectionRequest *request, ShapeDetectionResponse *response) {
 
-      Point *point = response->add_points();
+      dlib::frontal_face_detector detector = dlib::get_frontal_face_detector();
 
+      Point *point = response->add_points();
+      
       if (request->has_image()) {
         inference::Image image = request->image();
         std::string content = image.content();
 
-        struct jpeg_decompress_struct cinfo;
-        struct jpeg_error_mgr jerr;
-        cinfo.err = jpeg_std_error(&jerr);
-        jpeg_create_decompress(&cinfo);
-
-        const char * chrs = content.c_str();
-        auto uchrs = reinterpret_cast<unsigned char*>(const_cast<char*>(chrs));
-        auto jpg_size = content.length();
-        unsigned char *jpg_buffer = uchrs;
-        jpeg_mem_src(&cinfo, jpg_buffer, jpg_size);
-
-        int rc;
-        rc = jpeg_read_header(&cinfo, TRUE);
-        if (rc != 1) {
-          return grpc::Status(grpc::INVALID_ARGUMENT, "jpeg decode failed");
-        }
-        jpeg_start_decompress(&cinfo);
-
-        int width = cinfo.output_width;
-        int height = cinfo.output_height;
-        int pixel_size = cinfo.output_components;
-
-        unsigned long output_components_;
-
-        if (output_components_ != 1 && 
-            output_components_ != 3 &&
-            output_components_ != 4)
-        {
-            jpeg_destroy_decompress(&cinfo);
-            return grpc::Status(grpc::INVALID_ARGUMENT, "jpeg: unsupported number of colors");
-            // std::ostringstream sout;
-            // sout << "jpeg_loader: Unsupported number of colors (" << output_components_ << ") in file " << filename;
-            // throw image_load_error(sout.str());
-        }
-
-        std::vector<unsigned char> data;
-        std::vector<unsigned char*> rows;
-        rows.resize(height);
-
-        // size the image buffer
-        data.resize(height*width*output_components_);
-
-        // setup pointers to each row
-        for (unsigned long i = 0; i < rows.size(); ++i)
-            rows[i] = &data[i*width*output_components_];
-
-        // read the data into the buffer
-        while (cinfo.output_scanline < cinfo.output_height)
-        {
-            jpeg_read_scanlines(&cinfo, &rows[cinfo.output_scanline], 100);
-        }
-
-        jpeg_finish_decompress(&cinfo);
-        jpeg_destroy_decompress(&cinfo);
+        auto loader = JpegLoader();
+        loader.ReadImage(content);
 
         dlib::array2d<dlib::rgb_pixel> img;
+        loader.GetImage(img);
 
-        auto loader = JpegLoader(data, height, width, output_components_);
-        loader.get_image(img);
-
-        /*
-        dlib::load_image(img, namebuf);
-        // Make the image larger so we can detect small faces.
         dlib::pyramid_up(img);
-        */
+
+        // Now tell the face detector to give us a list of bounding boxes
+        // around all the faces in the image.
+        std::vector<dlib::rectangle> dets = detector(img);
+
+        // Now we will go ask the shape_predictor to tell us the pose of
+        // each face we detected.
+        std::vector<dlib::full_object_detection> shapes;
+        for (unsigned long j = 0; j < dets.size(); ++j)
+        {
+            dlib::full_object_detection shape = sp_(img, dets[j]);
+            std::cout << "number of parts: "<< shape.num_parts() << std::endl;
+            std::cout << "pixel position of first part:  " << shape.part(0) << std::endl;
+            std::cout << "pixel position of second part: " << shape.part(1) << std::endl;
+            // You get the idea, you can get all the face part locations if
+            // you want them.  Here we just store them in shapes so we can
+            // put them on the screen.
+            shapes.push_back(shape);
+        }
+
       }
-
-
-
-
 
       return Status::OK;
     }
 
   private:
     std::string model_file_;
+    dlib::shape_predictor sp_;
 };
 
 
