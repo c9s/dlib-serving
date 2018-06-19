@@ -66,7 +66,10 @@ class JpegLoader {
 
 public:
 
-  JpegLoader(std::vector<unsigned char>& data, int height, int width, int output_components)
+  explicit JpegLoader() : width_(0), height_(0), output_components_(0) { }
+
+
+  JpegLoader(const std::vector<unsigned char>& data, int height, int width, int output_components)
       : data(data), height_(height), width_(width), output_components_(output_components)
   {
       // read_image(filename);
@@ -87,6 +90,47 @@ public:
       return (output_components_ == 4);
   }
 
+  // decode jpeg image from memory
+  // https://gist.github.com/PhirePhly/3080633
+  void ReadImage(const std::string& content) {
+    const char * chrs = content.c_str();
+
+    struct jpeg_decompress_struct cinfo;
+    struct jpeg_error_mgr jerr;
+    cinfo.err = jpeg_std_error(&jerr);
+    jpeg_create_decompress(&cinfo);
+
+    auto uchrs = reinterpret_cast<unsigned char*>(const_cast<char*>(chrs));
+    auto jpg_size = content.length();
+    unsigned char *jpg_buffer = uchrs;
+    jpeg_mem_src(&cinfo, jpg_buffer, jpg_size);
+
+    int rc;
+    rc = jpeg_read_header(&cinfo, TRUE);
+    if (rc != 1) {
+      return;
+      // return grpc::Status(grpc::INVALID_ARGUMENT, "jpeg decode failed");
+    }
+    jpeg_start_decompress(&cinfo);
+
+    width_ = cinfo.output_width;
+    height_ = cinfo.output_height;
+
+    int pixel_size = cinfo.output_components;
+
+    if (output_components_ != 1 && 
+        output_components_ != 3 &&
+        output_components_ != 4)
+    {
+        jpeg_destroy_decompress(&cinfo);
+        return;
+        // return grpc::Status(grpc::INVALID_ARGUMENT, "jpeg: unsupported number of colors");
+        // std::ostringstream sout;
+        // sout << "jpeg_loader: Unsupported number of colors (" << output_components_ << ") in file " << filename;
+        // throw image_load_error(sout.str());
+    }
+
+  }
 
   template<typename T>
   void get_image(T &t_) const
@@ -125,9 +169,14 @@ public:
   }
 
 private:
+
+
+  int width_;
+
+  int height_;
+
   int output_components_;
-  const int width_;
-  const int height_;
+
   std::vector<unsigned char> data;
 
   const unsigned char* get_row(unsigned long i) const
@@ -204,7 +253,6 @@ class ShapeDetectionService final : public ShapeDetection::Service {
         jpeg_create_decompress(&cinfo);
 
         const char * chrs = content.c_str();
-
         auto uchrs = reinterpret_cast<unsigned char*>(const_cast<char*>(chrs));
         auto jpg_size = content.length();
         unsigned char *jpg_buffer = uchrs;
