@@ -122,14 +122,32 @@ public:
         output_components_ != 3 &&
         output_components_ != 4)
     {
-        jpeg_destroy_decompress(&cinfo);
-        return;
-        // return grpc::Status(grpc::INVALID_ARGUMENT, "jpeg: unsupported number of colors");
-        // std::ostringstream sout;
-        // sout << "jpeg_loader: Unsupported number of colors (" << output_components_ << ") in file " << filename;
-        // throw image_load_error(sout.str());
+      jpeg_destroy_decompress(&cinfo);
+      return;
+      // return grpc::Status(grpc::INVALID_ARGUMENT, "jpeg: unsupported number of colors");
+      // std::ostringstream sout;
+      // sout << "jpeg_loader: Unsupported number of colors (" << output_components_ << ") in file " << filename;
+      // throw image_load_error(sout.str());
     }
 
+    std::vector<unsigned char*> rows;
+    rows.resize(height_);
+
+    // size the image buffer
+    data.resize(height_ * width_ * output_components_);
+
+    // setup pointers to each row
+    for (unsigned long i = 0; i < rows.size(); ++i)
+        rows[i] = &data[i * width_ * output_components_];
+
+    // read the data into the buffer
+    while (cinfo.output_scanline < cinfo.output_height)
+    {
+        jpeg_read_scanlines(&cinfo, &rows[cinfo.output_scanline], 100);
+    }
+
+    jpeg_finish_decompress(&cinfo);
+    jpeg_destroy_decompress(&cinfo);
   }
 
   template<typename T>
