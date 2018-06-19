@@ -198,34 +198,10 @@ class ShapeDetectionService final : public ShapeDetection::Service {
         inference::Image image = request->image();
         std::string content = image.content();
 
-
-        char namebuf[100];
-        int retval, namebuf_size = 100;
-        retval = snprintf(namebuf, namebuf_size, "tmp_%d", 0);
-        if (retval > 0 && retval < namebuf_size) {
-          std::cout << namebuf << std::endl;
-        } else {
-          std::cout << "Error writing to buffer" << std::endl;
-          return grpc::Status(grpc::INVALID_ARGUMENT, "error: writing to buffer");
-        }
-
-        FILE *fp = fopen(namebuf, "wb");
-        if ( !fp )
-        {
-            // throw dlib::image_load_error(std::string("writer: unable to open file"));
-            return grpc::Status(grpc::INVALID_ARGUMENT, "unable to open file");
-        }
-
-        auto buffer = content.c_str();
-        fwrite(buffer, sizeof(char), content.length(), fp);
-        fclose(fp);
-
-
         struct jpeg_decompress_struct cinfo;
         struct jpeg_error_mgr jerr;
         cinfo.err = jpeg_std_error(&jerr);
         jpeg_create_decompress(&cinfo);
-
 
         const char * chrs = content.c_str();
 
