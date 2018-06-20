@@ -1,15 +1,11 @@
 cmake_minimum_required(VERSION 3.5)
 project(dlibinfer)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
-
 list(APPEND CMAKE_PREFIX_PATH /opt/local)
-
-# configure cmake itself
 set(CMAKE_CXX_STANDARD 11)
 
-# link_directories(/opt/local/lib)
-
-# configure boost
+# Configure boost
+# =========================================
 set(Boost_USE_STATIC_LIBS OFF) 
 set(Boost_USE_MULTITHREADED ON)  
 set(Boost_USE_STATIC_RUNTIME OFF) 
@@ -21,9 +17,14 @@ find_package(GIF REQUIRED)
 find_package(PNG REQUIRED)
 find_package(JPEG REQUIRED)
 
+# Configure pthread
+# =========================================
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 
+
+# Configure dlib packages...
+# =========================================
 # apt-get install libcblas-dev libcblas3
 find_package(BLAS)
 find_package(LAPACK)
