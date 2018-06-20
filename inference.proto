@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package inference;
+
+
+service ShapePrediction {
+    rpc PredictShape(DetectionRequest) returns (stream Point) {}
+}
+
+service ObjectDetection {
+    rpc DetectObjects(DetectionRequest) returns (stream Object) {}
+}
+
+message Point {
+  int32 x = 1;
+  int32 y = 2;
+}
+
+message Rectangle {
+  int32 x = 1;
+  int32 y = 2;
+  int32 width = 3;
+  int32 height = 4;
+}
+
+message Region {
+  int32 x = 1;
+  int32 y = 2;
+  int32 width = 3;
+  int32 height = 4;
+}
+
+message Image {
+  bytes content = 1;
+
+  Region region = 2;
+}
+
+message Object {
+  Point start = 1;
+  Point end = 2;
+  string label = 3;
+}
+
+message DetectionRequest {
+    Image image;
+    Rectangle rect;
+}
