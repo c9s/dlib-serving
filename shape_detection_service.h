@@ -1,36 +1,25 @@
 #ifndef SHAPE_DETECTION_SERVICE_H
 #define SHAPE_DETECTION_SERVICE_H
 
-#include <algorithm>
-#include <chrono>
-#include <cmath>
 #include <iostream>
-#include <memory>
 #include <string>
-
 #include <cstdio>
 #include <cstdlib>
 
 #include <grpc/grpc.h>
-#include <grpcpp/server.h>
-#include <grpcpp/server_builder.h>
 #include <grpcpp/server_context.h>
-#include <grpcpp/security/server_credentials.h>
 
 #include <dlib/config.h>
 #include <dlib/image_processing/frontal_face_detector.h>
 #include <dlib/image_processing.h>
 
-#include "helper.h"
+#include "jpeg_loader.h"
 #include "inference.pb.h"
 #include "inference.grpc.pb.h"
-
-#include "jpeg_loader.h"
 #include "face_detection_service.h"
 
 using grpc::ServerContext;
 using grpc::ServerReader;
-using grpc::ServerReaderWriter;
 using grpc::ServerWriter;
 using grpc::Status;
 

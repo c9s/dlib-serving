@@ -27,7 +27,6 @@
 #include <grpcpp/server_builder.h>
 #include <grpcpp/security/server_credentials.h>
 
-#include "helper.h"
 #include "inference.pb.h"
 #include "inference.grpc.pb.h"
 

@@ -19,9 +19,6 @@
 #include <dlib/image_processing.h>
 
 #include "jpeg_loader.h"
-#include "helper.h"
-#include "inference.pb.h"
-#include "inference.grpc.pb.h"
 #include "face_detection_service.h"
 
 using grpc::ServerContext;

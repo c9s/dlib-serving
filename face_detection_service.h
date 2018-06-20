@@ -1,8 +1,5 @@
 #ifndef FACE_DETECTION_SERVICE_H
 #define FACE_DETECTION_SERVICE_H
-
-#include <memory>
-
 #include <grpc/grpc.h>
 #include <grpcpp/server_context.h>
 
