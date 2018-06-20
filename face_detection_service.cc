@@ -24,8 +24,6 @@
 #include "inference.grpc.pb.h"
 #include "face_detection_service.h"
 
-using grpc::Server;
-using grpc::ServerBuilder;
 using grpc::ServerContext;
 using grpc::ServerReader;
 using grpc::ServerReaderWriter;
