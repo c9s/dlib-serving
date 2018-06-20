@@ -16,7 +16,7 @@
 #include "jpeg_loader.h"
 #include "inference.pb.h"
 #include "inference.grpc.pb.h"
-#include "face_detection_service.h"
+#include "shape_detection_service.h"
 
 using grpc::ServerContext;
 using grpc::ServerReader;
