@@ -1,10 +1,19 @@
+// vim:sw=2:ts=2:sts=2:
 syntax = "proto3";
 
 package inference;
 
+message ShapeDetectionResponse {
+  repeated Point points = 1;
+}
 
-service ShapePrediction {
-    rpc PredictShape(DetectionRequest) returns (stream Point) {}
+message DetectionRequest {
+    Image image = 1;
+    Rectangle rect = 2;
+}
+
+service ShapeDetection {
+    rpc DetectShape(DetectionRequest) returns (ShapeDetectionResponse) {}
 }
 
 service ObjectDetection {
@@ -42,7 +51,3 @@ message Object {
   string label = 3;
 }
 
-message DetectionRequest {
-    Image image;
-    Rectangle rect;
-}
