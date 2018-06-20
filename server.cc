@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-#include <chrono>
 #include <iostream>
 #include <memory>
 #include <string>
@@ -26,17 +25,12 @@
 #include <grpc/grpc.h>
 #include <grpcpp/server.h>
 #include <grpcpp/server_builder.h>
-#include <grpcpp/server_context.h>
 #include <grpcpp/security/server_credentials.h>
-
-#include <dlib/config.h>
-#include <dlib/image_processing.h>
 
 #include "helper.h"
 #include "inference.pb.h"
 #include "inference.grpc.pb.h"
 
-#include "jpeg_loader.h"
 #include "face_detection_service.h"
 #include "shape_detection_service.h"
 
@@ -50,10 +44,10 @@ using inference::ShapeDetectionResponse;
 
 using std::chrono::system_clock;
 
-void RunServer(const std::string& db_path) {
+void RunServer(const std::string& model_file) {
   std::string server_address("0.0.0.0:50051");
 
-  DlibShapeDetectionService service("shape_predictor_68_face_landmarks.dat");
+  DlibShapeDetectionService service(model_file);
   DlibFaceDetectionService service2;
 
   ServerBuilder builder;
@@ -66,9 +60,17 @@ void RunServer(const std::string& db_path) {
 }
 
 int main(int argc, char** argv) {
-  // Expect only arg: --db_path=path/to/route_guide_db.json.
-  // std::string db = inference::GetDbFileContent(argc, argv);
-  std::string db = "test";
-  RunServer(db);
+  const std::string default_shape_model = "shape_predictor_68_face_landmarks.dat";
+  const char * env_model_file = std::getenv("MODEL_FILE");
+
+  std::string model_file;
+  if (env_model_file != NULL) {
+    model_file.assign(env_model_file);
+  } else {
+    std::cout << "env MODEL_FILE is not defined." << std::endl;
+    std::cout << "fallback to default shape landmarks model:" << default_shape_model << std::endl;
+    model_file = default_shape_model;
+  }
+  RunServer(model_file);
   return 0;
 }
