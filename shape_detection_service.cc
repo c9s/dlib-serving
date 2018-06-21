@@ -15,12 +15,13 @@ using inference::DetectionRequest;
 Status DlibShapeDetectionService::DetectShape(ServerContext* context, DetectionRequest *request, ShapeDetectionResponse *response) {
   dlib::frontal_face_detector detector = dlib::get_frontal_face_detector();
 
-  if (!request->has_image()) {
+  /*
+  if (!request->image()) {
     return grpc::Status(grpc::INVALID_ARGUMENT, "image is required.");
   }
+  */
 
-  inference::Image image = request->image();
-  std::string content = image.content();
+  std::string content = request->image();
 
   auto loader = JpegLoader();
   loader.ReadImage(content);

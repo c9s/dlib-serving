@@ -28,6 +28,7 @@ using grpc::ServerWriter;
 using grpc::Status;
 
 using inference::Point;
+using inference::Object;
 using inference::Rectangle;
 using inference::ObjectDetection;
 using inference::DetectionRequest;
@@ -38,33 +39,36 @@ DlibFaceDetectionService::DlibFaceDetectionService() {
   detector_ = dlib::get_frontal_face_detector();
 }
 
-Status DlibFaceDetectionService::DetectObjects(ServerContext* context, const DetectionRequest* request, ServerWriter<Rectangle>* writer) {
-  if (!request->has_image()) {
-    return grpc::Status(grpc::INVALID_ARGUMENT, "image is required.");
-  }
+Status DlibFaceDetectionService::DetectObjects(ServerContext* context, const DetectionRequest* request, ServerWriter<Object>* writer) {
+  // return grpc::Status(grpc::INVALID_ARGUMENT, "image is required.");
+  std::string content = request->image();
 
-  inference::Image image = request->image();
-  std::string content = image.content();
-
+  std::cerr << "reading image" << std::endl;
   auto loader = JpegLoader();
   loader.ReadImage(content);
 
+  std::cerr << "loading image" << std::endl;
   dlib::array2d<dlib::rgb_pixel> img;
   loader.GetImage(img);
 
+  std::cerr << "pyramid up image" << std::endl;
   dlib::pyramid_up(img);
 
   // Now tell the face detector to give us a list of bounding boxes
   // around all the faces in the image.
+  std::cerr << "detecting" << std::endl;
   std::vector<dlib::rectangle> dets = detector_(img);
 
-  for (auto det : dets) {
-    auto rect = Rectangle();
-    rect.set_x(det.left());
-    rect.set_y(det.top());
-    rect.set_width(det.width());
-    rect.set_height(det.height());
-    writer->Write(rect);
+  for (const dlib::rectangle & det : dets) {
+    std::cout << "found face at " << det << std::endl;
+    Object obj;
+    Rectangle *rect = new Rectangle;
+    rect->set_x(det.left());
+    rect->set_y(det.top());
+    rect->set_width(det.width());
+    rect->set_height(det.height());
+    obj.set_allocated_rect(rect);
+    writer->Write(obj);
   }
 
   return Status::OK;

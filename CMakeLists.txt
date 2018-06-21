@@ -90,3 +90,6 @@ target_link_libraries(shape_detection_server ${Boost_LIBRARIES} JsonCpp::JsonCpp
 
 add_executable(face_detection_server ${PROTO_HDRS} ${PROTO_SRCS} ${GRPC_HDRS} ${GRPC_SRCS} jpeg_loader.cc face_detection_service.cc face_detection_server.cc)
 target_link_libraries(face_detection_server ${Boost_LIBRARIES} JsonCpp::JsonCpp ${GIF_LIBRARIES} ${PNG_LIBRARIES} ${JPEG_LIBRARY} ${BLAS_LIBRARIES} ${PROTOBUF_LIBRARY} dlib::dlib)
+
+add_executable(face_detection_client ${PROTO_HDRS} ${PROTO_SRCS} ${GRPC_HDRS} ${GRPC_SRCS} jpeg_loader.cc face_detection_client.cc)
+target_link_libraries(face_detection_client ${Boost_LIBRARIES} JsonCpp::JsonCpp ${GIF_LIBRARIES} ${PNG_LIBRARIES} ${JPEG_LIBRARY} ${BLAS_LIBRARIES} ${PROTOBUF_LIBRARY} dlib::dlib)

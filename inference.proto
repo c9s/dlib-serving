@@ -8,7 +8,7 @@ message ShapeDetectionResponse {
 }
 
 message DetectionRequest {
-    Image image = 1;
+    bytes image = 1;
     Rectangle rect = 2;
 }
 
@@ -39,15 +39,8 @@ message Region {
   int32 height = 4;
 }
 
-message Image {
-  bytes content = 1;
-
-  Region region = 2;
-}
-
 message Object {
-  Point start = 1;
-  Point end = 2;
-  string label = 3;
+  string label = 1;
+  Rectangle rect = 2;
 }
 

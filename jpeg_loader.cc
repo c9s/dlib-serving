@@ -27,6 +27,7 @@ void JpegLoader::ReadImage(const std::string& content) {
 
   int rc = jpeg_read_header(&cinfo, TRUE);
   if (rc != 1) {
+    std::cerr << "jpeg: decode failed" << std::endl;
     throw std::runtime_error("jpeg: decode failed");
     // return grpc::Status(grpc::INVALID_ARGUMENT, "jpeg decode failed");
   }
@@ -34,11 +35,13 @@ void JpegLoader::ReadImage(const std::string& content) {
 
   width_ = cinfo.output_width;
   height_ = cinfo.output_height;
+  output_components_ = cinfo.output_components;
 
   if (output_components_ != 1 && 
       output_components_ != 3 &&
       output_components_ != 4)
   {
+    std::cerr << "jpeg: unsupported number of colors: " << output_components_ << std::endl;
     jpeg_destroy_decompress(&cinfo);
     throw std::runtime_error("jpeg: unsupported number of colors");
     // return grpc::Status(grpc::INVALID_ARGUMENT, "jpeg: unsupported number of colors");

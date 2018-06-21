@@ -13,7 +13,7 @@ using grpc::ServerContext;
 using grpc::ServerWriter;
 using grpc::Status;
 
-using inference::Rectangle;
+using inference::Object;
 using inference::ObjectDetection;
 using inference::DetectionRequest;
 
@@ -22,7 +22,7 @@ using std::chrono::system_clock;
 class DlibFaceDetectionService final : public ObjectDetection::Service {
  public:
   DlibFaceDetectionService();
-  grpc::Status DetectObjects(grpc::ServerContext* context, const DetectionRequest* request, grpc::ServerWriter<Rectangle>* writer);
+  grpc::Status DetectObjects(grpc::ServerContext* context, const DetectionRequest* request, grpc::ServerWriter<Object>* writer);
  private:
   dlib::frontal_face_detector detector_;
 };
