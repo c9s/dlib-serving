@@ -1,1 +1,4 @@
 /build
+*.bz2
+*.gz
+*.dat

@@ -55,15 +55,15 @@ class FaceDetectionClient {
 
     Object obj;
     while (reader->Read(&obj)) {
-      std::cout << "Found rect: " << obj.rect().x() << "x" << obj.rect().y() << " at " << std::endl;
-      std::cout.flush();
+      std::cerr << "Found rect: " << obj.rect().x() << "x" << obj.rect().y() << " at " << std::endl;
+      std::cerr.flush();
     }
 
     Status status = reader->Finish();
     if (status.ok()) {
-      std::cout << "Detect rpc succeeded." << std::endl;
+      std::cerr << "Detect rpc succeeded." << std::endl;
     } else {
-      std::cout << "Detect rpc failed." << std::endl;
+      std::cerr << "Detect rpc failed." << std::endl;
     }
     std::cout << status.error_details() << std::endl;
     std::cout << status.error_message() << std::endl;
