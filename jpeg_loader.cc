@@ -5,8 +5,8 @@
 #include <cstdlib>
 
 #include <dlib/config.h>
-#include <dlib/image_processing/frontal_face_detector.h>
 #include <dlib/image_processing.h>
+#include <dlib/image_processing/frontal_face_detector.h>
 #include <jpeglib.h>
 #include "jpeg_loader.h"
 

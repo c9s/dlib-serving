@@ -38,33 +38,8 @@ set(DLIB_LIBS "${DLIB_LIBS} ${BLAS_LIBRARIES}")
 endif()
 # message("DLIB_LIBS: ${DLIB_LIBS}")
 
-if(DLIB_ROOT)
 
-    # Tell cmake we will need dlib.  This command will pull in dlib and compile it
-    # into your project.  Note that you don't need to compile or install dlib.  All
-    # it needs is the dlib source code folder and it will take care of everything.
-    include(${DLIB_ROOT}/dlib/cmake)
-
-else(DLIB_ROOT)
-
-    find_library(DLIB_LIBRARIES
-        NAMES dlib
-        PATHS
-        /opt/local/lib /usr/local/lib /usr/lib)
-    find_path(DLIB_INCLUDE_DIRS
-        NAMES dlib/config.h
-        PATHS /opt/local/include /usr/local/include /usr/include)
-
-    include_directories(${DLIB_INCLUDE_DIRS})
-
-    if(DLIB_LIBRARIES)
-        add_library(dlib::dlib INTERFACE IMPORTED)
-        set_target_properties(dlib::dlib PROPERTIES
-            INTERFACE_INCLUDE_DIRECTORIES "${DLIB_INCLUDE_DIRS}"
-            INTERFACE_LINK_LIBRARIES "${DLIB_LIBRARIES}")
-    endif()
-endif(DLIB_ROOT)
-
+find_package(dlib REQUIRED)
 find_package(Protobuf REQUIRED)
 find_package(GRPC REQUIRED)
 include_directories(${Protobuf_INCLUDE_DIRS})

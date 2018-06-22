@@ -1,4 +1,5 @@
 /build
+/dlib
 *.bz2
 *.gz
 *.dat
