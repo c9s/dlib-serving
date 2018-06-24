@@ -57,7 +57,7 @@ include_directories(${GRPC_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS} ${JSONCPP_INCLUDE
 # define the library
 # add_library(foo a.cc b.cc d.cc)
 
-add_executable(train-shape-predictor train_shape_predictor_ex.cc)
+add_executable(train-shape-predictor train_shape_predictor.cc)
 target_link_libraries(train-shape-predictor ${Boost_LIBRARIES} JsonCpp::JsonCpp ${GIF_LIBRARIES} ${PNG_LIBRARIES} ${JPEG_LIBRARY} ${BLAS_LIBRARIES} dlib::dlib)
 
 add_executable(shape_detection_server ${PROTO_HDRS} ${PROTO_SRCS} ${GRPC_HDRS} ${GRPC_SRCS} jpeg_loader.cc shape_detection_service.cc shape_detection_server.cc)

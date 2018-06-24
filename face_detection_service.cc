@@ -32,6 +32,7 @@ using inference::Object;
 using inference::Rectangle;
 using inference::ObjectDetection;
 using inference::DetectionRequest;
+using inference::DetectionResponse;
 
 using std::chrono::system_clock;
 
@@ -39,7 +40,7 @@ DlibFaceDetectionService::DlibFaceDetectionService() {
   detector_ = dlib::get_frontal_face_detector();
 }
 
-Status DlibFaceDetectionService::Detect(ServerContext* context, const DetectionRequest* request, ServerWriter<Object>* writer) {
+Status DlibFaceDetectionService::Detect(ServerContext* context, const DetectionRequest* request, DetectionResponse *response) {
   // return grpc::Status(grpc::INVALID_ARGUMENT, "image is required.");
   std::string content = request->image();
 
@@ -61,14 +62,11 @@ Status DlibFaceDetectionService::Detect(ServerContext* context, const DetectionR
 
   for (const dlib::rectangle & det : dets) {
     std::cout << "found face at " << det << std::endl;
-    Object obj;
-    Rectangle *rect = new Rectangle;
+    Rectangle *rect = response->add_rectangles();
     rect->set_x(det.left());
     rect->set_y(det.top());
     rect->set_width(det.width());
     rect->set_height(det.height());
-    obj.set_allocated_rect(rect);
-    writer->Write(obj);
   }
 
   return Status::OK;
