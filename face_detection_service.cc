@@ -39,7 +39,7 @@ DlibFaceDetectionService::DlibFaceDetectionService() {
   detector_ = dlib::get_frontal_face_detector();
 }
 
-Status DlibFaceDetectionService::DetectObjects(ServerContext* context, const DetectionRequest* request, ServerWriter<Object>* writer) {
+Status DlibFaceDetectionService::Detect(ServerContext* context, const DetectionRequest* request, ServerWriter<Object>* writer) {
   // return grpc::Status(grpc::INVALID_ARGUMENT, "image is required.");
   std::string content = request->image();
 

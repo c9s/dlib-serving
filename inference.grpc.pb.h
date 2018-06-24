@@ -142,39 +142,39 @@ class ObjectDetection final {
   class StubInterface {
    public:
     virtual ~StubInterface() {}
-    std::unique_ptr< ::grpc::ClientReaderInterface< ::inference::Object>> DetectObjects(::grpc::ClientContext* context, const ::inference::DetectionRequest& request) {
-      return std::unique_ptr< ::grpc::ClientReaderInterface< ::inference::Object>>(DetectObjectsRaw(context, request));
+    std::unique_ptr< ::grpc::ClientReaderInterface< ::inference::Object>> Detect(::grpc::ClientContext* context, const ::inference::DetectionRequest& request) {
+      return std::unique_ptr< ::grpc::ClientReaderInterface< ::inference::Object>>(DetectRaw(context, request));
     }
-    std::unique_ptr< ::grpc::ClientAsyncReaderInterface< ::inference::Object>> AsyncDetectObjects(::grpc::ClientContext* context, const ::inference::DetectionRequest& request, ::grpc::CompletionQueue* cq, void* tag) {
-      return std::unique_ptr< ::grpc::ClientAsyncReaderInterface< ::inference::Object>>(AsyncDetectObjectsRaw(context, request, cq, tag));
+    std::unique_ptr< ::grpc::ClientAsyncReaderInterface< ::inference::Object>> AsyncDetect(::grpc::ClientContext* context, const ::inference::DetectionRequest& request, ::grpc::CompletionQueue* cq, void* tag) {
+      return std::unique_ptr< ::grpc::ClientAsyncReaderInterface< ::inference::Object>>(AsyncDetectRaw(context, request, cq, tag));
     }
-    std::unique_ptr< ::grpc::ClientAsyncReaderInterface< ::inference::Object>> PrepareAsyncDetectObjects(::grpc::ClientContext* context, const ::inference::DetectionRequest& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncReaderInterface< ::inference::Object>>(PrepareAsyncDetectObjectsRaw(context, request, cq));
+    std::unique_ptr< ::grpc::ClientAsyncReaderInterface< ::inference::Object>> PrepareAsyncDetect(::grpc::ClientContext* context, const ::inference::DetectionRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncReaderInterface< ::inference::Object>>(PrepareAsyncDetectRaw(context, request, cq));
     }
   private:
-    virtual ::grpc::ClientReaderInterface< ::inference::Object>* DetectObjectsRaw(::grpc::ClientContext* context, const ::inference::DetectionRequest& request) = 0;
-    virtual ::grpc::ClientAsyncReaderInterface< ::inference::Object>* AsyncDetectObjectsRaw(::grpc::ClientContext* context, const ::inference::DetectionRequest& request, ::grpc::CompletionQueue* cq, void* tag) = 0;
-    virtual ::grpc::ClientAsyncReaderInterface< ::inference::Object>* PrepareAsyncDetectObjectsRaw(::grpc::ClientContext* context, const ::inference::DetectionRequest& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientReaderInterface< ::inference::Object>* DetectRaw(::grpc::ClientContext* context, const ::inference::DetectionRequest& request) = 0;
+    virtual ::grpc::ClientAsyncReaderInterface< ::inference::Object>* AsyncDetectRaw(::grpc::ClientContext* context, const ::inference::DetectionRequest& request, ::grpc::CompletionQueue* cq, void* tag) = 0;
+    virtual ::grpc::ClientAsyncReaderInterface< ::inference::Object>* PrepareAsyncDetectRaw(::grpc::ClientContext* context, const ::inference::DetectionRequest& request, ::grpc::CompletionQueue* cq) = 0;
   };
   class Stub final : public StubInterface {
    public:
     Stub(const std::shared_ptr< ::grpc::ChannelInterface>& channel);
-    std::unique_ptr< ::grpc::ClientReader< ::inference::Object>> DetectObjects(::grpc::ClientContext* context, const ::inference::DetectionRequest& request) {
-      return std::unique_ptr< ::grpc::ClientReader< ::inference::Object>>(DetectObjectsRaw(context, request));
+    std::unique_ptr< ::grpc::ClientReader< ::inference::Object>> Detect(::grpc::ClientContext* context, const ::inference::DetectionRequest& request) {
+      return std::unique_ptr< ::grpc::ClientReader< ::inference::Object>>(DetectRaw(context, request));
     }
-    std::unique_ptr< ::grpc::ClientAsyncReader< ::inference::Object>> AsyncDetectObjects(::grpc::ClientContext* context, const ::inference::DetectionRequest& request, ::grpc::CompletionQueue* cq, void* tag) {
-      return std::unique_ptr< ::grpc::ClientAsyncReader< ::inference::Object>>(AsyncDetectObjectsRaw(context, request, cq, tag));
+    std::unique_ptr< ::grpc::ClientAsyncReader< ::inference::Object>> AsyncDetect(::grpc::ClientContext* context, const ::inference::DetectionRequest& request, ::grpc::CompletionQueue* cq, void* tag) {
+      return std::unique_ptr< ::grpc::ClientAsyncReader< ::inference::Object>>(AsyncDetectRaw(context, request, cq, tag));
     }
-    std::unique_ptr< ::grpc::ClientAsyncReader< ::inference::Object>> PrepareAsyncDetectObjects(::grpc::ClientContext* context, const ::inference::DetectionRequest& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncReader< ::inference::Object>>(PrepareAsyncDetectObjectsRaw(context, request, cq));
+    std::unique_ptr< ::grpc::ClientAsyncReader< ::inference::Object>> PrepareAsyncDetect(::grpc::ClientContext* context, const ::inference::DetectionRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncReader< ::inference::Object>>(PrepareAsyncDetectRaw(context, request, cq));
     }
 
    private:
     std::shared_ptr< ::grpc::ChannelInterface> channel_;
-    ::grpc::ClientReader< ::inference::Object>* DetectObjectsRaw(::grpc::ClientContext* context, const ::inference::DetectionRequest& request) override;
-    ::grpc::ClientAsyncReader< ::inference::Object>* AsyncDetectObjectsRaw(::grpc::ClientContext* context, const ::inference::DetectionRequest& request, ::grpc::CompletionQueue* cq, void* tag) override;
-    ::grpc::ClientAsyncReader< ::inference::Object>* PrepareAsyncDetectObjectsRaw(::grpc::ClientContext* context, const ::inference::DetectionRequest& request, ::grpc::CompletionQueue* cq) override;
-    const ::grpc::internal::RpcMethod rpcmethod_DetectObjects_;
+    ::grpc::ClientReader< ::inference::Object>* DetectRaw(::grpc::ClientContext* context, const ::inference::DetectionRequest& request) override;
+    ::grpc::ClientAsyncReader< ::inference::Object>* AsyncDetectRaw(::grpc::ClientContext* context, const ::inference::DetectionRequest& request, ::grpc::CompletionQueue* cq, void* tag) override;
+    ::grpc::ClientAsyncReader< ::inference::Object>* PrepareAsyncDetectRaw(::grpc::ClientContext* context, const ::inference::DetectionRequest& request, ::grpc::CompletionQueue* cq) override;
+    const ::grpc::internal::RpcMethod rpcmethod_Detect_;
   };
   static std::unique_ptr<Stub> NewStub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options = ::grpc::StubOptions());
 
@@ -182,69 +182,69 @@ class ObjectDetection final {
    public:
     Service();
     virtual ~Service();
-    virtual ::grpc::Status DetectObjects(::grpc::ServerContext* context, const ::inference::DetectionRequest* request, ::grpc::ServerWriter< ::inference::Object>* writer);
+    virtual ::grpc::Status Detect(::grpc::ServerContext* context, const ::inference::DetectionRequest* request, ::grpc::ServerWriter< ::inference::Object>* writer);
   };
   template <class BaseClass>
-  class WithAsyncMethod_DetectObjects : public BaseClass {
+  class WithAsyncMethod_Detect : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service *service) {}
    public:
-    WithAsyncMethod_DetectObjects() {
+    WithAsyncMethod_Detect() {
       ::grpc::Service::MarkMethodAsync(0);
     }
-    ~WithAsyncMethod_DetectObjects() override {
+    ~WithAsyncMethod_Detect() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status DetectObjects(::grpc::ServerContext* context, const ::inference::DetectionRequest* request, ::grpc::ServerWriter< ::inference::Object>* writer) final override {
+    ::grpc::Status Detect(::grpc::ServerContext* context, const ::inference::DetectionRequest* request, ::grpc::ServerWriter< ::inference::Object>* writer) final override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
-    void RequestDetectObjects(::grpc::ServerContext* context, ::inference::DetectionRequest* request, ::grpc::ServerAsyncWriter< ::inference::Object>* writer, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+    void RequestDetect(::grpc::ServerContext* context, ::inference::DetectionRequest* request, ::grpc::ServerAsyncWriter< ::inference::Object>* writer, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
       ::grpc::Service::RequestAsyncServerStreaming(0, context, request, writer, new_call_cq, notification_cq, tag);
     }
   };
-  typedef WithAsyncMethod_DetectObjects<Service > AsyncService;
+  typedef WithAsyncMethod_Detect<Service > AsyncService;
   template <class BaseClass>
-  class WithGenericMethod_DetectObjects : public BaseClass {
+  class WithGenericMethod_Detect : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service *service) {}
    public:
-    WithGenericMethod_DetectObjects() {
+    WithGenericMethod_Detect() {
       ::grpc::Service::MarkMethodGeneric(0);
     }
-    ~WithGenericMethod_DetectObjects() override {
+    ~WithGenericMethod_Detect() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status DetectObjects(::grpc::ServerContext* context, const ::inference::DetectionRequest* request, ::grpc::ServerWriter< ::inference::Object>* writer) final override {
+    ::grpc::Status Detect(::grpc::ServerContext* context, const ::inference::DetectionRequest* request, ::grpc::ServerWriter< ::inference::Object>* writer) final override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
   };
   typedef Service StreamedUnaryService;
   template <class BaseClass>
-  class WithSplitStreamingMethod_DetectObjects : public BaseClass {
+  class WithSplitStreamingMethod_Detect : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service *service) {}
    public:
-    WithSplitStreamingMethod_DetectObjects() {
+    WithSplitStreamingMethod_Detect() {
       ::grpc::Service::MarkMethodStreamed(0,
-        new ::grpc::internal::SplitServerStreamingHandler< ::inference::DetectionRequest, ::inference::Object>(std::bind(&WithSplitStreamingMethod_DetectObjects<BaseClass>::StreamedDetectObjects, this, std::placeholders::_1, std::placeholders::_2)));
+        new ::grpc::internal::SplitServerStreamingHandler< ::inference::DetectionRequest, ::inference::Object>(std::bind(&WithSplitStreamingMethod_Detect<BaseClass>::StreamedDetect, this, std::placeholders::_1, std::placeholders::_2)));
     }
-    ~WithSplitStreamingMethod_DetectObjects() override {
+    ~WithSplitStreamingMethod_Detect() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable regular version of this method
-    ::grpc::Status DetectObjects(::grpc::ServerContext* context, const ::inference::DetectionRequest* request, ::grpc::ServerWriter< ::inference::Object>* writer) final override {
+    ::grpc::Status Detect(::grpc::ServerContext* context, const ::inference::DetectionRequest* request, ::grpc::ServerWriter< ::inference::Object>* writer) final override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     // replace default version of method with split streamed
-    virtual ::grpc::Status StreamedDetectObjects(::grpc::ServerContext* context, ::grpc::ServerSplitStreamer< ::inference::DetectionRequest,::inference::Object>* server_split_streamer) = 0;
+    virtual ::grpc::Status StreamedDetect(::grpc::ServerContext* context, ::grpc::ServerSplitStreamer< ::inference::DetectionRequest,::inference::Object>* server_split_streamer) = 0;
   };
-  typedef WithSplitStreamingMethod_DetectObjects<Service > SplitStreamedService;
-  typedef WithSplitStreamingMethod_DetectObjects<Service > StreamedService;
+  typedef WithSplitStreamingMethod_Detect<Service > SplitStreamedService;
+  typedef WithSplitStreamingMethod_Detect<Service > StreamedService;
 };
 
 }  // namespace inference

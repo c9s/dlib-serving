@@ -22,7 +22,7 @@ using std::chrono::system_clock;
 class DlibFaceDetectionService final : public ObjectDetection::Service {
  public:
   DlibFaceDetectionService();
-  grpc::Status DetectObjects(grpc::ServerContext* context, const DetectionRequest* request, grpc::ServerWriter<Object>* writer);
+  grpc::Status Detect(grpc::ServerContext* context, const DetectionRequest* request, grpc::ServerWriter<Object>* writer);
  private:
   dlib::frontal_face_detector detector_;
 };

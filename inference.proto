@@ -19,7 +19,7 @@ service ShapeDetection {
 }
 
 service ObjectDetection {
-    rpc DetectObjects(DetectionRequest) returns (stream Object) {}
+    rpc Detect(DetectionRequest) returns (stream Object) {}
 }
 
 message Point {

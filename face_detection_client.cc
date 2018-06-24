@@ -51,7 +51,7 @@ class FaceDetectionClient {
 
     ClientContext context;
     std::unique_ptr<ClientReader<Object> > reader(
-        stub_->DetectObjects(&context, request));
+        stub_->Detect(&context, request));
 
     Object obj;
     while (reader->Read(&obj)) {

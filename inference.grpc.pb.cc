@@ -61,7 +61,7 @@ ShapeDetection::Service::~Service() {
 
 
 static const char* ObjectDetection_method_names[] = {
-  "/inference.ObjectDetection/DetectObjects",
+  "/inference.ObjectDetection/Detect",
 };
 
 std::unique_ptr< ObjectDetection::Stub> ObjectDetection::NewStub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options) {
@@ -71,19 +71,19 @@ std::unique_ptr< ObjectDetection::Stub> ObjectDetection::NewStub(const std::shar
 }
 
 ObjectDetection::Stub::Stub(const std::shared_ptr< ::grpc::ChannelInterface>& channel)
-  : channel_(channel), rpcmethod_DetectObjects_(ObjectDetection_method_names[0], ::grpc::internal::RpcMethod::SERVER_STREAMING, channel)
+  : channel_(channel), rpcmethod_Detect_(ObjectDetection_method_names[0], ::grpc::internal::RpcMethod::SERVER_STREAMING, channel)
   {}
 
-::grpc::ClientReader< ::inference::Object>* ObjectDetection::Stub::DetectObjectsRaw(::grpc::ClientContext* context, const ::inference::DetectionRequest& request) {
-  return ::grpc::internal::ClientReaderFactory< ::inference::Object>::Create(channel_.get(), rpcmethod_DetectObjects_, context, request);
+::grpc::ClientReader< ::inference::Object>* ObjectDetection::Stub::DetectRaw(::grpc::ClientContext* context, const ::inference::DetectionRequest& request) {
+  return ::grpc::internal::ClientReaderFactory< ::inference::Object>::Create(channel_.get(), rpcmethod_Detect_, context, request);
 }
 
-::grpc::ClientAsyncReader< ::inference::Object>* ObjectDetection::Stub::AsyncDetectObjectsRaw(::grpc::ClientContext* context, const ::inference::DetectionRequest& request, ::grpc::CompletionQueue* cq, void* tag) {
-  return ::grpc::internal::ClientAsyncReaderFactory< ::inference::Object>::Create(channel_.get(), cq, rpcmethod_DetectObjects_, context, request, true, tag);
+::grpc::ClientAsyncReader< ::inference::Object>* ObjectDetection::Stub::AsyncDetectRaw(::grpc::ClientContext* context, const ::inference::DetectionRequest& request, ::grpc::CompletionQueue* cq, void* tag) {
+  return ::grpc::internal::ClientAsyncReaderFactory< ::inference::Object>::Create(channel_.get(), cq, rpcmethod_Detect_, context, request, true, tag);
 }
 
-::grpc::ClientAsyncReader< ::inference::Object>* ObjectDetection::Stub::PrepareAsyncDetectObjectsRaw(::grpc::ClientContext* context, const ::inference::DetectionRequest& request, ::grpc::CompletionQueue* cq) {
-  return ::grpc::internal::ClientAsyncReaderFactory< ::inference::Object>::Create(channel_.get(), cq, rpcmethod_DetectObjects_, context, request, false, nullptr);
+::grpc::ClientAsyncReader< ::inference::Object>* ObjectDetection::Stub::PrepareAsyncDetectRaw(::grpc::ClientContext* context, const ::inference::DetectionRequest& request, ::grpc::CompletionQueue* cq) {
+  return ::grpc::internal::ClientAsyncReaderFactory< ::inference::Object>::Create(channel_.get(), cq, rpcmethod_Detect_, context, request, false, nullptr);
 }
 
 ObjectDetection::Service::Service() {
@@ -91,13 +91,13 @@ ObjectDetection::Service::Service() {
       ObjectDetection_method_names[0],
       ::grpc::internal::RpcMethod::SERVER_STREAMING,
       new ::grpc::internal::ServerStreamingHandler< ObjectDetection::Service, ::inference::DetectionRequest, ::inference::Object>(
-          std::mem_fn(&ObjectDetection::Service::DetectObjects), this)));
+          std::mem_fn(&ObjectDetection::Service::Detect), this)));
 }
 
 ObjectDetection::Service::~Service() {
 }
 
-::grpc::Status ObjectDetection::Service::DetectObjects(::grpc::ServerContext* context, const ::inference::DetectionRequest* request, ::grpc::ServerWriter< ::inference::Object>* writer) {
+::grpc::Status ObjectDetection::Service::Detect(::grpc::ServerContext* context, const ::inference::DetectionRequest* request, ::grpc::ServerWriter< ::inference::Object>* writer) {
   (void) context;
   (void) request;
   (void) writer;
