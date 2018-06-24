@@ -6,6 +6,7 @@ package inference;
 message DetectionResponse {
   string type = 1;
   repeated Point points = 2;
+  repeated Rectangle rectangle = 2;
 }
 
 message DetectionRequest {
