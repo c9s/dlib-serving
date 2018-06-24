@@ -10,8 +10,6 @@ set(Boost_USE_STATIC_LIBS OFF)
 set(Boost_USE_MULTITHREADED ON)  
 set(Boost_USE_STATIC_RUNTIME OFF) 
 find_package(Boost 1.45.0 COMPONENTS system filesystem program_options)
-find_package(JsonCpp REQUIRED)
-
 
 # Configure pthread
 # =========================================
@@ -52,13 +50,13 @@ include_directories(${GRPC_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS} ${JSONCPP_INCLUDE
 # add_library(foo a.cc b.cc d.cc)
 
 add_executable(train-shape-predictor train_shape_predictor.cc)
-target_link_libraries(train-shape-predictor ${Boost_LIBRARIES} JsonCpp::JsonCpp dlib::dlib)
+target_link_libraries(train-shape-predictor ${Boost_LIBRARIES} dlib::dlib)
 
 add_executable(shape-detection-server ${PROTO_HDRS} ${PROTO_SRCS} ${GRPC_HDRS} ${GRPC_SRCS} jpeg_loader.cc shape_detection_service.cc shape_detection_server.cc)
-target_link_libraries(shape-detection-server ${Boost_LIBRARIES} JsonCpp::JsonCpp ${GIF_LIBRARIES} ${PNG_LIBRARIES} ${JPEG_LIBRARY} ${PROTOBUF_LIBRARY} dlib::dlib)
+target_link_libraries(shape-detection-server ${Boost_LIBRARIES} ${GIF_LIBRARIES} ${PNG_LIBRARIES} ${JPEG_LIBRARY} ${PROTOBUF_LIBRARY} dlib::dlib)
 
 add_executable(face-detection-server ${PROTO_HDRS} ${PROTO_SRCS} ${GRPC_HDRS} ${GRPC_SRCS} jpeg_loader.cc face_detection_service.cc face_detection_server.cc)
-target_link_libraries(face-detection-server ${Boost_LIBRARIES} JsonCpp::JsonCpp ${GIF_LIBRARIES} ${PNG_LIBRARIES} ${JPEG_LIBRARY} ${BLAS_LIBRARIES} ${PROTOBUF_LIBRARY} dlib::dlib)
+target_link_libraries(face-detection-server ${Boost_LIBRARIES} ${GIF_LIBRARIES} ${PNG_LIBRARIES} ${JPEG_LIBRARY} ${BLAS_LIBRARIES} ${PROTOBUF_LIBRARY} dlib::dlib)
 
 add_executable(face-detection-client ${PROTO_HDRS} ${PROTO_SRCS} ${GRPC_HDRS} ${GRPC_SRCS} jpeg_loader.cc face_detection_client.cc)
-target_link_libraries(face-detection-client ${Boost_LIBRARIES} JsonCpp::JsonCpp ${GIF_LIBRARIES} ${PNG_LIBRARIES} ${JPEG_LIBRARY} ${BLAS_LIBRARIES} ${PROTOBUF_LIBRARY} dlib::dlib)
+target_link_libraries(face-detection-client ${Boost_LIBRARIES} ${GIF_LIBRARIES} ${PNG_LIBRARIES} ${JPEG_LIBRARY} ${BLAS_LIBRARIES} ${PROTOBUF_LIBRARY} dlib::dlib)
