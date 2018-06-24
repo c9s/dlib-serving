@@ -35,33 +35,33 @@ class ShapeDetection final {
   class StubInterface {
    public:
     virtual ~StubInterface() {}
-    virtual ::grpc::Status DetectShape(::grpc::ClientContext* context, const ::inference::DetectionRequest& request, ::inference::DetectionResponse* response) = 0;
-    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::inference::DetectionResponse>> AsyncDetectShape(::grpc::ClientContext* context, const ::inference::DetectionRequest& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::inference::DetectionResponse>>(AsyncDetectShapeRaw(context, request, cq));
+    virtual ::grpc::Status Detect(::grpc::ClientContext* context, const ::inference::DetectionRequest& request, ::inference::DetectionResponse* response) = 0;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::inference::DetectionResponse>> AsyncDetect(::grpc::ClientContext* context, const ::inference::DetectionRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::inference::DetectionResponse>>(AsyncDetectRaw(context, request, cq));
     }
-    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::inference::DetectionResponse>> PrepareAsyncDetectShape(::grpc::ClientContext* context, const ::inference::DetectionRequest& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::inference::DetectionResponse>>(PrepareAsyncDetectShapeRaw(context, request, cq));
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::inference::DetectionResponse>> PrepareAsyncDetect(::grpc::ClientContext* context, const ::inference::DetectionRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::inference::DetectionResponse>>(PrepareAsyncDetectRaw(context, request, cq));
     }
   private:
-    virtual ::grpc::ClientAsyncResponseReaderInterface< ::inference::DetectionResponse>* AsyncDetectShapeRaw(::grpc::ClientContext* context, const ::inference::DetectionRequest& request, ::grpc::CompletionQueue* cq) = 0;
-    virtual ::grpc::ClientAsyncResponseReaderInterface< ::inference::DetectionResponse>* PrepareAsyncDetectShapeRaw(::grpc::ClientContext* context, const ::inference::DetectionRequest& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::inference::DetectionResponse>* AsyncDetectRaw(::grpc::ClientContext* context, const ::inference::DetectionRequest& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::inference::DetectionResponse>* PrepareAsyncDetectRaw(::grpc::ClientContext* context, const ::inference::DetectionRequest& request, ::grpc::CompletionQueue* cq) = 0;
   };
   class Stub final : public StubInterface {
    public:
     Stub(const std::shared_ptr< ::grpc::ChannelInterface>& channel);
-    ::grpc::Status DetectShape(::grpc::ClientContext* context, const ::inference::DetectionRequest& request, ::inference::DetectionResponse* response) override;
-    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::inference::DetectionResponse>> AsyncDetectShape(::grpc::ClientContext* context, const ::inference::DetectionRequest& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::inference::DetectionResponse>>(AsyncDetectShapeRaw(context, request, cq));
+    ::grpc::Status Detect(::grpc::ClientContext* context, const ::inference::DetectionRequest& request, ::inference::DetectionResponse* response) override;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::inference::DetectionResponse>> AsyncDetect(::grpc::ClientContext* context, const ::inference::DetectionRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::inference::DetectionResponse>>(AsyncDetectRaw(context, request, cq));
     }
-    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::inference::DetectionResponse>> PrepareAsyncDetectShape(::grpc::ClientContext* context, const ::inference::DetectionRequest& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::inference::DetectionResponse>>(PrepareAsyncDetectShapeRaw(context, request, cq));
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::inference::DetectionResponse>> PrepareAsyncDetect(::grpc::ClientContext* context, const ::inference::DetectionRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::inference::DetectionResponse>>(PrepareAsyncDetectRaw(context, request, cq));
     }
 
    private:
     std::shared_ptr< ::grpc::ChannelInterface> channel_;
-    ::grpc::ClientAsyncResponseReader< ::inference::DetectionResponse>* AsyncDetectShapeRaw(::grpc::ClientContext* context, const ::inference::DetectionRequest& request, ::grpc::CompletionQueue* cq) override;
-    ::grpc::ClientAsyncResponseReader< ::inference::DetectionResponse>* PrepareAsyncDetectShapeRaw(::grpc::ClientContext* context, const ::inference::DetectionRequest& request, ::grpc::CompletionQueue* cq) override;
-    const ::grpc::internal::RpcMethod rpcmethod_DetectShape_;
+    ::grpc::ClientAsyncResponseReader< ::inference::DetectionResponse>* AsyncDetectRaw(::grpc::ClientContext* context, const ::inference::DetectionRequest& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::inference::DetectionResponse>* PrepareAsyncDetectRaw(::grpc::ClientContext* context, const ::inference::DetectionRequest& request, ::grpc::CompletionQueue* cq) override;
+    const ::grpc::internal::RpcMethod rpcmethod_Detect_;
   };
   static std::unique_ptr<Stub> NewStub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options = ::grpc::StubOptions());
 
@@ -69,69 +69,69 @@ class ShapeDetection final {
    public:
     Service();
     virtual ~Service();
-    virtual ::grpc::Status DetectShape(::grpc::ServerContext* context, const ::inference::DetectionRequest* request, ::inference::DetectionResponse* response);
+    virtual ::grpc::Status Detect(::grpc::ServerContext* context, const ::inference::DetectionRequest* request, ::inference::DetectionResponse* response);
   };
   template <class BaseClass>
-  class WithAsyncMethod_DetectShape : public BaseClass {
+  class WithAsyncMethod_Detect : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service *service) {}
    public:
-    WithAsyncMethod_DetectShape() {
+    WithAsyncMethod_Detect() {
       ::grpc::Service::MarkMethodAsync(0);
     }
-    ~WithAsyncMethod_DetectShape() override {
+    ~WithAsyncMethod_Detect() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status DetectShape(::grpc::ServerContext* context, const ::inference::DetectionRequest* request, ::inference::DetectionResponse* response) final override {
+    ::grpc::Status Detect(::grpc::ServerContext* context, const ::inference::DetectionRequest* request, ::inference::DetectionResponse* response) final override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
-    void RequestDetectShape(::grpc::ServerContext* context, ::inference::DetectionRequest* request, ::grpc::ServerAsyncResponseWriter< ::inference::DetectionResponse>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+    void RequestDetect(::grpc::ServerContext* context, ::inference::DetectionRequest* request, ::grpc::ServerAsyncResponseWriter< ::inference::DetectionResponse>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
       ::grpc::Service::RequestAsyncUnary(0, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
-  typedef WithAsyncMethod_DetectShape<Service > AsyncService;
+  typedef WithAsyncMethod_Detect<Service > AsyncService;
   template <class BaseClass>
-  class WithGenericMethod_DetectShape : public BaseClass {
+  class WithGenericMethod_Detect : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service *service) {}
    public:
-    WithGenericMethod_DetectShape() {
+    WithGenericMethod_Detect() {
       ::grpc::Service::MarkMethodGeneric(0);
     }
-    ~WithGenericMethod_DetectShape() override {
+    ~WithGenericMethod_Detect() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status DetectShape(::grpc::ServerContext* context, const ::inference::DetectionRequest* request, ::inference::DetectionResponse* response) final override {
+    ::grpc::Status Detect(::grpc::ServerContext* context, const ::inference::DetectionRequest* request, ::inference::DetectionResponse* response) final override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
   };
   template <class BaseClass>
-  class WithStreamedUnaryMethod_DetectShape : public BaseClass {
+  class WithStreamedUnaryMethod_Detect : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service *service) {}
    public:
-    WithStreamedUnaryMethod_DetectShape() {
+    WithStreamedUnaryMethod_Detect() {
       ::grpc::Service::MarkMethodStreamed(0,
-        new ::grpc::internal::StreamedUnaryHandler< ::inference::DetectionRequest, ::inference::DetectionResponse>(std::bind(&WithStreamedUnaryMethod_DetectShape<BaseClass>::StreamedDetectShape, this, std::placeholders::_1, std::placeholders::_2)));
+        new ::grpc::internal::StreamedUnaryHandler< ::inference::DetectionRequest, ::inference::DetectionResponse>(std::bind(&WithStreamedUnaryMethod_Detect<BaseClass>::StreamedDetect, this, std::placeholders::_1, std::placeholders::_2)));
     }
-    ~WithStreamedUnaryMethod_DetectShape() override {
+    ~WithStreamedUnaryMethod_Detect() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable regular version of this method
-    ::grpc::Status DetectShape(::grpc::ServerContext* context, const ::inference::DetectionRequest* request, ::inference::DetectionResponse* response) final override {
+    ::grpc::Status Detect(::grpc::ServerContext* context, const ::inference::DetectionRequest* request, ::inference::DetectionResponse* response) final override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     // replace default version of method with streamed unary
-    virtual ::grpc::Status StreamedDetectShape(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::inference::DetectionRequest,::inference::DetectionResponse>* server_unary_streamer) = 0;
+    virtual ::grpc::Status StreamedDetect(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::inference::DetectionRequest,::inference::DetectionResponse>* server_unary_streamer) = 0;
   };
-  typedef WithStreamedUnaryMethod_DetectShape<Service > StreamedUnaryService;
+  typedef WithStreamedUnaryMethod_Detect<Service > StreamedUnaryService;
   typedef Service SplitStreamedService;
-  typedef WithStreamedUnaryMethod_DetectShape<Service > StreamedService;
+  typedef WithStreamedUnaryMethod_Detect<Service > StreamedService;
 };
 
 class ObjectDetection final {

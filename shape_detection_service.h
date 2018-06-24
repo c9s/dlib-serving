@@ -35,7 +35,7 @@ class DlibShapeDetectionService final : public ShapeDetection::Service {
       dlib::deserialize(model_file_) >> sp_;
     }
 
-    Status DetectShape(ServerContext* context, DetectionRequest *request, DetectionResponse *response);
+    Status Detect(ServerContext* context, DetectionRequest *request, DetectionResponse *response);
 
   private:
     std::string model_file_;

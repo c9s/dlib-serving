@@ -15,7 +15,7 @@ message DetectionRequest {
 }
 
 service ShapeDetection {
-    rpc DetectShape(DetectionRequest) returns (DetectionResponse) {}
+    rpc Detect(DetectionRequest) returns (DetectionResponse) {}
 }
 
 service ObjectDetection {

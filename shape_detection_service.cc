@@ -12,7 +12,7 @@ using inference::ShapeDetection;
 using inference::DetectionResponse;
 using inference::DetectionRequest;
 
-Status DlibShapeDetectionService::DetectShape(ServerContext* context, DetectionRequest *request, DetectionResponse *response) {
+Status DlibShapeDetectionService::Detect(ServerContext* context, DetectionRequest *request, DetectionResponse *response) {
   dlib::frontal_face_detector detector = dlib::get_frontal_face_detector();
 
   /*
