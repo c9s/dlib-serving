@@ -3,8 +3,9 @@ syntax = "proto3";
 
 package inference;
 
-message ShapeDetectionResponse {
-  repeated Point points = 1;
+message DetectionResponse {
+  string type = 1;
+  repeated Point points = 2;
 }
 
 message DetectionRequest {
@@ -13,7 +14,7 @@ message DetectionRequest {
 }
 
 service ShapeDetection {
-    rpc DetectShape(DetectionRequest) returns (ShapeDetectionResponse) {}
+    rpc DetectShape(DetectionRequest) returns (DetectionResponse) {}
 }
 
 service ObjectDetection {

@@ -24,7 +24,7 @@ using grpc::ServerWriter;
 using grpc::Status;
 
 using inference::ShapeDetection;
-using inference::ShapeDetectionResponse;
+using inference::DetectionResponse;
 using inference::DetectionRequest;
 
 class DlibShapeDetectionService final : public ShapeDetection::Service {
@@ -35,7 +35,7 @@ class DlibShapeDetectionService final : public ShapeDetection::Service {
       dlib::deserialize(model_file_) >> sp_;
     }
 
-    Status DetectShape(ServerContext* context, DetectionRequest *request, ShapeDetectionResponse *response);
+    Status DetectShape(ServerContext* context, DetectionRequest *request, DetectionResponse *response);
 
   private:
     std::string model_file_;

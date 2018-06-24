@@ -9,10 +9,10 @@ using grpc::Status;
 using inference::Point;
 using inference::ObjectDetection;
 using inference::ShapeDetection;
-using inference::ShapeDetectionResponse;
+using inference::DetectionResponse;
 using inference::DetectionRequest;
 
-Status DlibShapeDetectionService::DetectShape(ServerContext* context, DetectionRequest *request, ShapeDetectionResponse *response) {
+Status DlibShapeDetectionService::DetectShape(ServerContext* context, DetectionRequest *request, DetectionResponse *response) {
   dlib::frontal_face_detector detector = dlib::get_frontal_face_detector();
 
   /*

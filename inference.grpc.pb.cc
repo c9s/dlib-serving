@@ -29,30 +29,30 @@ ShapeDetection::Stub::Stub(const std::shared_ptr< ::grpc::ChannelInterface>& cha
   : channel_(channel), rpcmethod_DetectShape_(ShapeDetection_method_names[0], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
   {}
 
-::grpc::Status ShapeDetection::Stub::DetectShape(::grpc::ClientContext* context, const ::inference::DetectionRequest& request, ::inference::ShapeDetectionResponse* response) {
+::grpc::Status ShapeDetection::Stub::DetectShape(::grpc::ClientContext* context, const ::inference::DetectionRequest& request, ::inference::DetectionResponse* response) {
   return ::grpc::internal::BlockingUnaryCall(channel_.get(), rpcmethod_DetectShape_, context, request, response);
 }
 
-::grpc::ClientAsyncResponseReader< ::inference::ShapeDetectionResponse>* ShapeDetection::Stub::AsyncDetectShapeRaw(::grpc::ClientContext* context, const ::inference::DetectionRequest& request, ::grpc::CompletionQueue* cq) {
-  return ::grpc::internal::ClientAsyncResponseReaderFactory< ::inference::ShapeDetectionResponse>::Create(channel_.get(), cq, rpcmethod_DetectShape_, context, request, true);
+::grpc::ClientAsyncResponseReader< ::inference::DetectionResponse>* ShapeDetection::Stub::AsyncDetectShapeRaw(::grpc::ClientContext* context, const ::inference::DetectionRequest& request, ::grpc::CompletionQueue* cq) {
+  return ::grpc::internal::ClientAsyncResponseReaderFactory< ::inference::DetectionResponse>::Create(channel_.get(), cq, rpcmethod_DetectShape_, context, request, true);
 }
 
-::grpc::ClientAsyncResponseReader< ::inference::ShapeDetectionResponse>* ShapeDetection::Stub::PrepareAsyncDetectShapeRaw(::grpc::ClientContext* context, const ::inference::DetectionRequest& request, ::grpc::CompletionQueue* cq) {
-  return ::grpc::internal::ClientAsyncResponseReaderFactory< ::inference::ShapeDetectionResponse>::Create(channel_.get(), cq, rpcmethod_DetectShape_, context, request, false);
+::grpc::ClientAsyncResponseReader< ::inference::DetectionResponse>* ShapeDetection::Stub::PrepareAsyncDetectShapeRaw(::grpc::ClientContext* context, const ::inference::DetectionRequest& request, ::grpc::CompletionQueue* cq) {
+  return ::grpc::internal::ClientAsyncResponseReaderFactory< ::inference::DetectionResponse>::Create(channel_.get(), cq, rpcmethod_DetectShape_, context, request, false);
 }
 
 ShapeDetection::Service::Service() {
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       ShapeDetection_method_names[0],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
-      new ::grpc::internal::RpcMethodHandler< ShapeDetection::Service, ::inference::DetectionRequest, ::inference::ShapeDetectionResponse>(
+      new ::grpc::internal::RpcMethodHandler< ShapeDetection::Service, ::inference::DetectionRequest, ::inference::DetectionResponse>(
           std::mem_fn(&ShapeDetection::Service::DetectShape), this)));
 }
 
 ShapeDetection::Service::~Service() {
 }
 
-::grpc::Status ShapeDetection::Service::DetectShape(::grpc::ServerContext* context, const ::inference::DetectionRequest* request, ::inference::ShapeDetectionResponse* response) {
+::grpc::Status ShapeDetection::Service::DetectShape(::grpc::ServerContext* context, const ::inference::DetectionRequest* request, ::inference::DetectionResponse* response) {
   (void) context;
   (void) request;
   (void) response;
