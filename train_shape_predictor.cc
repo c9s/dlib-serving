@@ -1,14 +1,15 @@
-
-#include <dlib/config.h>
-#include <dlib/image_processing.h>
-#include <dlib/data_io.h>
-
 #include <cstdio>
 #include <cstdlib>
 #include <iostream>
 
+#include <dlib/config.h>
+#include <dlib/image_processing.h>
+#include <dlib/data_io.h>
+#include <boost/filesystem.hpp>
+
 using namespace dlib;
 using namespace std;
+namespace fs = boost::filesystem;
 
 // ----------------------------------------------------------------------------------------
 
@@ -41,7 +42,7 @@ int main(int argc, char** argv)
         cout << "this program by running: " << endl;
         cout << "   ./train_shape_predictor [data direcotry]" << endl;
         cout << endl;
-        return 0;
+        return 1;
     }
 
     std::string data_directory;
@@ -49,6 +50,12 @@ int main(int argc, char** argv)
       data_directory.assign(argv[1]);
     } else if (c_data_dir != NULL) {
       data_directory.assign(c_data_dir);
+    }
+
+    fs::path p = fs::path(data_directory);
+    if (!fs::is_directory(p)) {
+      cerr << "directory " << data_directory << " does not exist" << endl;
+      return 1;
     }
 
     try
