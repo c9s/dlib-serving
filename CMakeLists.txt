@@ -28,7 +28,7 @@ find_package(LAPACK)
 
 if(DLIB_ROOT)
     add_subdirectory(${DLIB_ROOT})
-elseif(DLIB_ROOT)
+else(DLIB_ROOT)
     find_package(dlib REQUIRED)
 endif(DLIB_ROOT)
 
