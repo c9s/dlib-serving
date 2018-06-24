@@ -12,34 +12,28 @@ set(Boost_USE_STATIC_RUNTIME OFF)
 find_package(Boost 1.45.0 COMPONENTS system filesystem program_options)
 find_package(JsonCpp REQUIRED)
 
-# apt-get install libgif-dev libgif7
-find_package(GIF REQUIRED)
-find_package(PNG REQUIRED)
-find_package(JPEG REQUIRED)
 
 # Configure pthread
 # =========================================
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 
-
 # Configure dlib packages...
 # =========================================
+# apt-get install libgif-dev libgif7
+find_package(GIF REQUIRED)
+find_package(PNG REQUIRED)
+find_package(JPEG REQUIRED)
 # apt-get install libcblas-dev libcblas3
 find_package(BLAS)
 find_package(LAPACK)
 
-set(DLIB_LIBS "${GIF_LIBRARIES} ${PNG_LIBRARIES} ${JPEG_LIBRARY}")
-if(LAPACK_FOUND)
-set(DLIB_LIBS "${DLIB_LIBS} ${LAPACK_LIBRARIES}")
-endif()
-if (BLAS_FOUND)
-set(DLIB_LIBS "${DLIB_LIBS} ${BLAS_LIBRARIES}")
-endif()
-# message("DLIB_LIBS: ${DLIB_LIBS}")
+if(DLIB_ROOT)
+    add_subdirectory(${DLIB_ROOT})
+elseif(DLIB_ROOT)
+    find_package(dlib REQUIRED)
+endif(DLIB_ROOT)
 
-
-find_package(dlib REQUIRED)
 find_package(Protobuf REQUIRED)
 find_package(GRPC REQUIRED)
 include_directories(${Protobuf_INCLUDE_DIRS})
@@ -58,13 +52,13 @@ include_directories(${GRPC_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS} ${JSONCPP_INCLUDE
 # add_library(foo a.cc b.cc d.cc)
 
 add_executable(train-shape-predictor train_shape_predictor.cc)
-target_link_libraries(train-shape-predictor ${Boost_LIBRARIES} JsonCpp::JsonCpp ${GIF_LIBRARIES} ${PNG_LIBRARIES} ${JPEG_LIBRARY} ${BLAS_LIBRARIES} dlib::dlib)
+target_link_libraries(train-shape-predictor ${Boost_LIBRARIES} JsonCpp::JsonCpp dlib::dlib)
 
-add_executable(shape_detection_server ${PROTO_HDRS} ${PROTO_SRCS} ${GRPC_HDRS} ${GRPC_SRCS} jpeg_loader.cc shape_detection_service.cc shape_detection_server.cc)
-target_link_libraries(shape_detection_server ${Boost_LIBRARIES} JsonCpp::JsonCpp ${GIF_LIBRARIES} ${PNG_LIBRARIES} ${JPEG_LIBRARY} ${BLAS_LIBRARIES} ${PROTOBUF_LIBRARY} dlib::dlib)
+add_executable(shape-detection-server ${PROTO_HDRS} ${PROTO_SRCS} ${GRPC_HDRS} ${GRPC_SRCS} jpeg_loader.cc shape_detection_service.cc shape_detection_server.cc)
+target_link_libraries(shape-detection-server ${Boost_LIBRARIES} JsonCpp::JsonCpp ${GIF_LIBRARIES} ${PNG_LIBRARIES} ${JPEG_LIBRARY} ${PROTOBUF_LIBRARY} dlib::dlib)
 
-add_executable(face_detection_server ${PROTO_HDRS} ${PROTO_SRCS} ${GRPC_HDRS} ${GRPC_SRCS} jpeg_loader.cc face_detection_service.cc face_detection_server.cc)
-target_link_libraries(face_detection_server ${Boost_LIBRARIES} JsonCpp::JsonCpp ${GIF_LIBRARIES} ${PNG_LIBRARIES} ${JPEG_LIBRARY} ${BLAS_LIBRARIES} ${PROTOBUF_LIBRARY} dlib::dlib)
+add_executable(face-detection-server ${PROTO_HDRS} ${PROTO_SRCS} ${GRPC_HDRS} ${GRPC_SRCS} jpeg_loader.cc face_detection_service.cc face_detection_server.cc)
+target_link_libraries(face-detection-server ${Boost_LIBRARIES} JsonCpp::JsonCpp ${GIF_LIBRARIES} ${PNG_LIBRARIES} ${JPEG_LIBRARY} ${BLAS_LIBRARIES} ${PROTOBUF_LIBRARY} dlib::dlib)
 
-add_executable(face_detection_client ${PROTO_HDRS} ${PROTO_SRCS} ${GRPC_HDRS} ${GRPC_SRCS} jpeg_loader.cc face_detection_client.cc)
-target_link_libraries(face_detection_client ${Boost_LIBRARIES} JsonCpp::JsonCpp ${GIF_LIBRARIES} ${PNG_LIBRARIES} ${JPEG_LIBRARY} ${BLAS_LIBRARIES} ${PROTOBUF_LIBRARY} dlib::dlib)
+add_executable(face-detection-client ${PROTO_HDRS} ${PROTO_SRCS} ${GRPC_HDRS} ${GRPC_SRCS} jpeg_loader.cc face_detection_client.cc)
+target_link_libraries(face-detection-client ${Boost_LIBRARIES} JsonCpp::JsonCpp ${GIF_LIBRARIES} ${PNG_LIBRARIES} ${JPEG_LIBRARY} ${BLAS_LIBRARIES} ${PROTOBUF_LIBRARY} dlib::dlib)

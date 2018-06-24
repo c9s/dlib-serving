@@ -1,7 +1,11 @@
-#include <iostream>
+
 #include <dlib/config.h>
 #include <dlib/image_processing.h>
 #include <dlib/data_io.h>
+
+#include <cstdio>
+#include <cstdlib>
+#include <iostream>
 
 using namespace dlib;
 using namespace std;
@@ -23,23 +27,32 @@ std::vector<std::vector<double> > get_interocular_distances (
 
 int main(int argc, char** argv)
 {
+    const char *c_data_dir = std::getenv("DATA_DIR");
+
+    // In this example we are going to train a shape_predictor based on the
+    // small faces dataset in the examples/faces directory.  So the first
+    // thing we do is load that dataset.  This means you need to supply the
+    // path to this faces folder as a command line argument so we will know
+    // where it is.
+    if (argc != 2 && c_data_dir == NULL)
+    {
+        cout << "Give the path to the examples/faces directory as the argument to this" << endl;
+        cout << "program.  For example, if you are in the examples folder then execute " << endl;
+        cout << "this program by running: " << endl;
+        cout << "   ./train_shape_predictor [data direcotry]" << endl;
+        cout << endl;
+        return 0;
+    }
+
+    std::string data_directory;
+    if (argc == 2) {
+      data_directory.assign(argv[1]);
+    } else if (c_data_dir != NULL) {
+      data_directory.assign(c_data_dir);
+    }
+
     try
     {
-        // In this example we are going to train a shape_predictor based on the
-        // small faces dataset in the examples/faces directory.  So the first
-        // thing we do is load that dataset.  This means you need to supply the
-        // path to this faces folder as a command line argument so we will know
-        // where it is.
-        if (argc != 2)
-        {
-            cout << "Give the path to the examples/faces directory as the argument to this" << endl;
-            cout << "program.  For example, if you are in the examples folder then execute " << endl;
-            cout << "this program by running: " << endl;
-            cout << "   ./train_shape_predictor faces" << endl;
-            cout << endl;
-            return 0;
-        }
-        const std::string data_directory = argv[1];
         // The faces directory contains a training dataset and a separate
         // testing dataset.  The training data consists of 4 images, each
         // annotated with rectangles that bound each human face along with 68
@@ -71,8 +84,12 @@ int main(int argc, char** argv)
         // tool which can be found in the tools/imglab folder.  It is a simple
         // graphical tool for labeling objects in images.  To see how to use it
         // read the tools/imglab/README.txt file.
+        cout << "loading training image dataset" << endl;
         load_image_dataset(images_train, faces_train, data_directory+"/training.xml");
+
+        cout << "loading testing image dataset" << endl;
         load_image_dataset(images_test, faces_test, data_directory+"/testing.xml");
+
 
         // Now make the object responsible for training the model.  
         shape_predictor_trainer trainer;
@@ -100,7 +117,7 @@ int main(int argc, char** argv)
         trainer.be_verbose();
 
         // Now finally generate the shape model
-        shape_predictor sp = trainer.train(images_train, faces_train);
+        dlib::shape_predictor sp = trainer.train(images_train, faces_train);
 
 
         // Now that we have a model we can test it.  This function measures the
@@ -118,11 +135,16 @@ int main(int argc, char** argv)
         // extremely high, but it's still doing quite good.  Moreover, if you
         // train it on one of the large face landmarking datasets you will
         // obtain state-of-the-art results, as shown in the Kazemi paper.
-        cout << "mean testing error:  "<< 
+        cout << "mean testing error:  " << 
             test_shape_predictor(sp, images_test, faces_test, get_interocular_distances(faces_test)) << endl;
 
+
+        std::string output_file = "sp.dat";
+
+        cout << "writing model file at " << output_file << endl;
+
         // Finally, we save the model to disk so we can use it later.
-        serialize("sp.dat") << sp;
+        dlib::serialize(output_file) << sp;
     }
     catch (exception& e)
     {
