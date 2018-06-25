@@ -1,4 +1,3 @@
-# FROM alpine:edge
 FROM yoanlin/alpine-boost-dev:edge
 
 RUN apk update \
@@ -60,7 +59,7 @@ RUN tar xvf master.tar.gz \
     && cmake -DDLIB_PNG_SUPPORT=ON -DDLIB_GIF_SUPPORT=ON -DDLIB_JPEG_SUPPORT=ON .. \
     && cmake --build . --config Release \
     && make install \
- ) && rm master.tar.gz
+ ) && rm master.tar.gz && rm -rf /dlib/build
 
 RUN mkdir /src
 COPY *.cc /src/
@@ -70,8 +69,26 @@ COPY CMakeLists.txt /src/
 COPY *.proto /src/
 RUN mkdir /build
 WORKDIR /build
+RUN cmake /src && cmake --build . -- -j2
 RUN curl -O https://storage.googleapis.com/dlib-models/shape_predictor_68_face_landmarks.dat
+RUN curl -O https://storage.googleapis.com/dlib-models/shape_predictor_5_face_landmarks.dat
 
-# RUN apk add --virtual .app-deps --no-cache jsoncpp-dev jsoncpp \
-#  && apk del .app-deps
-RUN cmake /src && make -j2
+FROM alpine:edge
+WORKDIR /
+RUN apk update \
+ && apk add --no-cache giflib \
+    jpeg \
+    libjpeg-turbo \
+    libpng \
+    boost-system \
+    boost-program_options \
+    boost-filesystem \
+    openblas
+RUN apk add libcrypto1.0 libssl1.0 protobuf libstdc++ openssl
+RUN rm -rf /usr/local
+COPY --from=0 /usr/local/ /usr/local/
+COPY --from=0 /build/*.dat /
+COPY --from=0 /build/face-detection-server /
+COPY --from=0 /build/face-detection-client /
+COPY --from=0 /build/shape-detection-server /
+COPY --from=0 /build/train-shape-predictor /
