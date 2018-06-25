@@ -7,6 +7,7 @@
 
 #include <grpc/grpc.h>
 #include <grpcpp/server.h>
+#include <grpcpp/server_context.h>
 #include <grpcpp/server_builder.h>
 #include <grpcpp/security/server_credentials.h>
 
@@ -20,8 +21,7 @@ using grpc::ServerBuilder;
 using grpc::ServerContext;
 using std::chrono::system_clock;
 
-void RunServer(const std::string& model_file) {
-  std::string server_address("0.0.0.0:50051");
+void RunServer(const std::string& server_address, const std::string& model_file) {
 
   DlibShapeDetectionService service(model_file);
 
@@ -45,6 +45,7 @@ int main(int argc, char** argv) {
     std::cout << "fallback to default shape landmarks model:" << default_shape_model << std::endl;
     model_file = default_shape_model;
   }
-  RunServer(model_file);
+  std::string server_address("0.0.0.0:50051");
+  RunServer(server_address, model_file);
   return 0;
 }

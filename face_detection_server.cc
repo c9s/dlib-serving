@@ -5,9 +5,12 @@
 #include <cstdio>
 #include <cstdlib>
 
+#include <boost/program_options.hpp>
+
 #include <grpc/grpc.h>
 #include <grpcpp/server.h>
 #include <grpcpp/server_builder.h>
+#include <grpcpp/server_context.h>
 #include <grpcpp/security/server_credentials.h>
 
 #include "inference.pb.h"
@@ -21,11 +24,10 @@ using grpc::ServerContext;
 
 using std::chrono::system_clock;
 
-void RunServer() {
-  std::string server_address("0.0.0.0:50051"); 
+const int DEFAULT_TCP_PORT = 50001;
 
+void RunServer(const std::string& server_address) {
   DlibFaceDetectionService service;
-
   ServerBuilder builder;
   builder.AddListeningPort(server_address, grpc::InsecureServerCredentials());
   builder.RegisterService(&service);
@@ -36,7 +38,30 @@ void RunServer() {
 }
 
 int main(int argc, char** argv) {
+    std::string bind;
+    bool verbose;
+    boost::program_options::options_description desc("Options");
+    desc.add_options()
+        ("help", "Options related to the program.")
+        ("bind,b", boost::program_options::value<std::string>(&bind)->default_value("0.0.0.0:50051"),"Address to bind")
+        ("verbose,v", boost::program_options::bool_switch(&verbose)->default_value(false), "Print to stdout information as job is processed.")
+        ;
+
+  // parse command line options
+  boost::program_options::variables_map vm;
+
+  try
+  {
+      boost::program_options::store(boost::program_options::parse_command_line(argc, argv, desc), vm);
+      boost::program_options::notify(vm);
+  }
+  catch(std::exception &e)
+  {
+    std::cerr << e.what() << std::endl;
+    return 1;
+  }
+
   // const char * env_model_file = std::getenv("MODEL_FILE");
-  RunServer();
+  RunServer(bind);
   return 0;
 }
