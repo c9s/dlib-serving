@@ -1,0 +1,16 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: model-serving-default-face-detector
+  labels:
+    type: dlib
+    service: inference
+spec:
+  ports:
+  - protocol: TCP
+    port: 50051
+    targetPort: 50051
+  selector:
+    service: model-serving
+    model: default-face-detector

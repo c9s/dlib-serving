@@ -2,10 +2,10 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
+  name: model-serving-default-face-detector
   labels:
     type: dlib
     service: inference
-  name: model-serving-default-face-detector
 spec:
   replicas: 1
   selector:
