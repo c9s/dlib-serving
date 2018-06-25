@@ -70,7 +70,8 @@ COPY CMakeLists.txt /src/
 COPY *.proto /src/
 RUN mkdir /build
 WORKDIR /build
-RUN apk add --virtual .app-deps --no-cache jsoncpp-dev jsoncpp
+RUN curl -O https://storage.googleapis.com/dlib-models/shape_predictor_68_face_landmarks.dat
+
 # RUN apk add --virtual .app-deps --no-cache jsoncpp-dev jsoncpp \
 #  && apk del .app-deps
 RUN cmake /src && make -j2
