@@ -5,18 +5,18 @@ metadata:
   labels:
     type: dlib
     service: inference
-  name: model-serving-shape-predictor-68-face-landmarks
+  name: model-serving-sp-68-face-landmarks
 spec:
   replicas: 1
   selector:
     matchLabels:
       service: model-serving
-      model: shape-predictor-68-face-landmarks
+      model: sp-68-face-landmarks
   template:
     metadata:
       labels:
         service: model-serving
-        model: shape-predictor-68-face-landmarks
+        model: sp-68-face-landmarks
     spec:
       containers:
       - name: server
