@@ -1,0 +1,24 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    type: dlib
+    service: inference
+  name: model-serving-shape-predictor-68-face-landmarks
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: model-serving
+      model: shape-predictor-68-face-landmarks
+  template:
+    metadata:
+      labels:
+        service: model-serving
+        model: shape-predictor-68-face-landmarks
+    spec:
+      containers:
+      - name: server
+        image: yoanlin/dlib-serving:latest
+        command: ["/shape-detection-server"]

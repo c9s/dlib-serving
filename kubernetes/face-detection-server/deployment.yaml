@@ -1,0 +1,24 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    type: dlib
+    service: inference
+  name: model-serving-default-face-detector
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: model-serving
+      model: default-face-detector
+  template:
+    metadata:
+      labels:
+        service: model-serving
+        model: default-face-detector
+    spec:
+      containers:
+      - name: server
+        image: yoanlin/dlib-serving:latest
+        command: ["/face-detection-server"]
