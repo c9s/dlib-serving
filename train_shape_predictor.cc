@@ -5,7 +5,10 @@
 #include <dlib/config.h>
 #include <dlib/image_processing.h>
 #include <dlib/data_io.h>
+
 #include <boost/filesystem.hpp>
+#include <boost/program_options.hpp>
+#include <boost/lexical_cast.hpp>
 
 using namespace dlib;
 using namespace std;
@@ -28,14 +31,33 @@ std::vector<std::vector<double> > get_interocular_distances (
 
 int main(int argc, char** argv)
 {
-    const char *c_data_dir = std::getenv("DATA_DIR");
+    std::string output;
+    std::string data_directory;
 
-    // In this example we are going to train a shape_predictor based on the
-    // small faces dataset in the examples/faces directory.  So the first
-    // thing we do is load that dataset.  This means you need to supply the
-    // path to this faces folder as a command line argument so we will know
-    // where it is.
-    if (argc != 2 && c_data_dir == NULL)
+    boost::program_options::options_description desc("Options");
+    desc.add_options()
+        ("help", "Options related to the program.")
+        ("output,o", boost::program_options::value<std::string>(&output)->default_value("sp.dat"),"output file")
+        ("data-dir", boost::program_options::value<std::string>(&data_directory)->default_value("faces"),"data directory")
+        ;
+
+    boost::program_options::variables_map vm;
+    boost::program_options::store(boost::program_options::parse_environment(desc, [](const std::string& env_var) {
+        return env_var == "DATA_DIR" ? "data-dir" : "";
+    }), vm);
+
+    try
+    {
+        boost::program_options::store(boost::program_options::parse_command_line(argc, argv, desc), vm);
+        boost::program_options::notify(vm);
+    }
+    catch(std::exception &e)
+    { 
+        std::cout << e.what() << std::endl;
+        return 1;
+    }
+
+    if (data_directory.empty())
     {
         cout << "Give the path to the examples/faces directory as the argument to this" << endl;
         cout << "program.  For example, if you are in the examples folder then execute " << endl;
@@ -43,13 +65,6 @@ int main(int argc, char** argv)
         cout << "   ./train_shape_predictor [data direcotry]" << endl;
         cout << endl;
         return 1;
-    }
-
-    std::string data_directory;
-    if (argc == 2) {
-      data_directory.assign(argv[1]);
-    } else if (c_data_dir != NULL) {
-      data_directory.assign(c_data_dir);
     }
 
     fs::path p = fs::path(data_directory);
