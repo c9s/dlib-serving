@@ -161,12 +161,10 @@ int main(int argc, char** argv)
             test_shape_predictor(sp, images_test, faces_test, get_interocular_distances(faces_test)) << endl;
 
 
-        std::string output_file = "sp.dat";
-
-        cout << "writing model file at " << output_file << endl;
+        cout << "writing model file at " << output << endl;
 
         // Finally, we save the model to disk so we can use it later.
-        dlib::serialize(output_file) << sp;
+        dlib::serialize(output) << sp;
     }
     catch (exception& e)
     {
