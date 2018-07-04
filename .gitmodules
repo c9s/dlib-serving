@@ -1,3 +1,4 @@
 [submodule "protos"]
 	path = protos
-	url = git@github.com:c9s/model-serving-proto.git
+    # url = git@github.com:c9s/model-serving-proto.git
+	url = https://github.com/c9s/model-serving-proto.git
