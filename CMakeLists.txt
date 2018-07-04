@@ -34,14 +34,22 @@ endif(DLIB_ROOT)
 
 find_package(Protobuf REQUIRED)
 find_package(GRPC REQUIRED)
+
 include_directories(${Protobuf_INCLUDE_DIRS})
 
 # the protobuf_generate_cpp-generated pb files are located at CMAKE_CURRENT_BINARY_DIR
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
-protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS inference.proto)
-protobuf_generate_python(PROTO_PY inference.proto)
-grpc_generate_cpp(GRPC_SRCS GRPC_HDRS ${CMAKE_CURRENT_BINARY_DIR} inference.proto)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/protos)
+set(PROTO_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/protos/serving.pb.cc")
+set(PROTO_HDRS "${CMAKE_CURRENT_SOURCE_DIR}/protos/serving.pb.h")
+
+set(GRPC_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/protos/serving.grpc.pb.cc")
+set(GRPC_HDRS "${CMAKE_CURRENT_SOURCE_DIR}/protos/serving.grpc.pb.h")
+
+# protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS ${CMAKE_CURRENT_SOURCE_DIR}/serving.proto)
+# protobuf_generate_python(PROTO_PY ${CMAKE_CURRENT_SOURCE_DIR}/serving.proto)
+# grpc_generate_cpp(GRPC_SRCS GRPC_HDRS ${CMAKE_CURRENT_SOURCE_DIR}/protos ${CMAKE_CURRENT_SOURCE_DIR}/protos/serving.proto)
 
 link_libraries(${GRPC_GRPC++_LIBRARY} ${GRPC_LIBRARY} ${PROTOBUF_LIBRARY})
 include_directories(${GRPC_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS} ${JSONCPP_INCLUDE_DIRS} ${GIF_INCLUDE_DIR} ${JPEG_INCLUDE_DIR} ${PNG_INCLUDE_DIR} ${DLIB_INCLUDE_DIRS})

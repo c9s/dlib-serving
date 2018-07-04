@@ -1,6 +1,7 @@
 *.dat
 /CMakeFiles
 /build
+tags
 *.gz
 *.bz2
 *.dat

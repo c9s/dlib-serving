@@ -15,8 +15,8 @@
 #include <grpcpp/create_channel.h>
 #include <grpcpp/security/credentials.h>
 
-#include "inference.pb.h"
-#include "inference.grpc.pb.h"
+#include "serving.pb.h"
+#include "serving.grpc.pb.h"
 
 using grpc::Channel;
 using grpc::ClientContext;
@@ -25,16 +25,16 @@ using grpc::ClientReaderWriter;
 using grpc::ClientWriter;
 using grpc::Status;
 
-using inference::ObjectDetection;
-using inference::DetectionRequest;
-using inference::Object;
-using inference::Point;
+using serving::ObjectDetection;
+using serving::DetectionRequest;
+using serving::Object;
+using serving::Point;
 
 class FaceDetectionClient {
 
   public:
     FaceDetectionClient(std::shared_ptr<Channel> channel)
-      : stub_(inference::ObjectDetection::NewStub(channel)) { }
+      : stub_(serving::ObjectDetection::NewStub(channel)) { }
 
   bool DetectImageFile(const std::string& image_file) {
     std::ifstream file(image_file, std::ios::binary);
@@ -47,15 +47,15 @@ class FaceDetectionClient {
   bool DetectImage(const std::string& image) {
     DetectionRequest request;
     request.set_allocated_image(new std::string(image));
-    request.clear_rect();
+    request.clear_region();
 
     ClientContext context;
     std::unique_ptr<ClientReader<Object> > reader(
-        stub_->Detect(&context, request));
+        stub_->DetectStream(&context, request));
 
     Object obj;
     while (reader->Read(&obj)) {
-      std::cerr << "Found rect: " << obj.rect().x() << "x" << obj.rect().y() << " at " << std::endl;
+      std::cerr << "Found rect: " << obj.box().x() << "x" << obj.box().y() << " at " << std::endl;
       std::cerr.flush();
     }
 

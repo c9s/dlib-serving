@@ -27,12 +27,12 @@ using grpc::ServerReaderWriter;
 using grpc::ServerWriter;
 using grpc::Status;
 
-using inference::Point;
-using inference::Object;
-using inference::Rectangle;
-using inference::ObjectDetection;
-using inference::DetectionRequest;
-using inference::DetectionResponse;
+using serving::Point;
+using serving::Object;
+using serving::Rectangle;
+using serving::ObjectDetection;
+using serving::DetectionRequest;
+using serving::DetectionResponse;
 
 using std::chrono::system_clock;
 
@@ -40,7 +40,7 @@ DlibFaceDetectionService::DlibFaceDetectionService() {
   detector_ = dlib::get_frontal_face_detector();
 }
 
-Status DlibFaceDetectionService::Detect(ServerContext* context, const DetectionRequest* request, DetectionResponse *response) {
+Status DlibFaceDetectionService::DetectStream(ServerContext* context, const DetectionRequest* request, DetectionResponse *response) {
   // return grpc::Status(grpc::INVALID_ARGUMENT, "image is required.");
   std::string content = request->image();
 

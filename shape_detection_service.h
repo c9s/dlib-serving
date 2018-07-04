@@ -14,8 +14,8 @@
 #include <dlib/image_processing.h>
 
 #include "jpeg_loader.h"
-#include "inference.pb.h"
-#include "inference.grpc.pb.h"
+#include "serving.pb.h"
+#include "serving.grpc.pb.h"
 #include "shape_detection_service.h"
 
 using grpc::ServerContext;
@@ -23,9 +23,9 @@ using grpc::ServerReader;
 using grpc::ServerWriter;
 using grpc::Status;
 
-using inference::ShapeDetection;
-using inference::DetectionResponse;
-using inference::DetectionRequest;
+using serving::ShapeDetection;
+using serving::DetectionResponse;
+using serving::DetectionRequest;
 
 class DlibShapeDetectionService final : public ShapeDetection::Service {
   public:

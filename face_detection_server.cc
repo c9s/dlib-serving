@@ -13,8 +13,8 @@
 #include <grpcpp/server_context.h>
 #include <grpcpp/security/server_credentials.h>
 
-#include "inference.pb.h"
-#include "inference.grpc.pb.h"
+#include "serving.pb.h"
+#include "serving.grpc.pb.h"
 
 #include "face_detection_service.h"
 

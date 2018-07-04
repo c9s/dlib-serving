@@ -6,11 +6,11 @@ using grpc::ServerReaderWriter;
 using grpc::ServerWriter;
 using grpc::Status;
 
-using inference::Point;
-using inference::ObjectDetection;
-using inference::ShapeDetection;
-using inference::DetectionResponse;
-using inference::DetectionRequest;
+using serving::Point;
+using serving::ObjectDetection;
+using serving::ShapeDetection;
+using serving::DetectionResponse;
+using serving::DetectionRequest;
 
 Status DlibShapeDetectionService::Detect(ServerContext* context, DetectionRequest *request, DetectionResponse *response) {
   dlib::frontal_face_detector detector = dlib::get_frontal_face_detector();
