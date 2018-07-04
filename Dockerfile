@@ -66,7 +66,7 @@ COPY *.cc /src/
 COPY *.h /src/
 COPY cmake/ /src/cmake/
 COPY CMakeLists.txt /src/
-COPY *.proto /src/
+COPY protos/ /src/protos/
 RUN mkdir /build
 WORKDIR /build
 RUN cmake /src && cmake --build . -- -j2
