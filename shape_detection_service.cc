@@ -29,9 +29,6 @@ Status DlibShapeDetectionService::Detect(ServerContext* context, const Detection
   dlib::array2d<dlib::rgb_pixel> img;
   loader.GetImage(img);
 
-  std::cerr << "pyramid up image" << std::endl;
-  dlib::pyramid_up(img);
-
   // Now tell the face detector to give us a list of bounding boxes
   // around all the faces in the image.
   std::cerr << "detecting..." << std::endl;
