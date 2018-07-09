@@ -55,12 +55,15 @@ class FaceDetectionClient {
     ClientContext context;
     Status status = stub_->Detect(&context, request, &response);
 
+    std::cerr << "type: " << response.type() << std::endl;
+
     for (int i = 0; i < response.objects_size() ; i++) {
       const Object obj = response.objects(i);
       std::cerr 
-        << "Found rect at: (" << obj.box().x() << "," << obj.box().y() << ")"
-        << " size: " << obj.box().width() << "x" << obj.box().height()
-        << std::endl;
+        << "Found face box at: (" << obj.box().x() << "," << obj.box().y() << ")"
+        << " size: " << obj.box().width() << "x" << obj.box().height();
+
+      std::cerr << std::endl;
       std::cerr.flush();
     }
     if (status.ok()) {

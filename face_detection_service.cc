@@ -72,6 +72,7 @@ Status DlibFaceDetectionService::DetectStream(ServerContext* context, const Dete
     box->set_width(det.width());
     box->set_height(det.height());
     object->set_allocated_box(box);
+    object->clear_shape();
   }
 
   return Status::OK;

@@ -62,6 +62,8 @@ Status DlibShapeDetectionService::Detect(ServerContext* context, DetectionReques
 
       Shape *obj_shape = new Shape;
       obj_shape->set_contenttype("point/series");
+      obj_shape->clear_points();
+
       for (unsigned long pi = 0; pi < shape.num_parts(); ++pi) {
         dlib::point part = shape.part(pi);
         obj_shape->add_series(part.x());
