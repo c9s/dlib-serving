@@ -13,7 +13,6 @@
 
 #include "serving.pb.h"
 #include "serving.grpc.pb.h"
-
 #include "shape_detection_service.h"
 
 using grpc::Server;

@@ -15,27 +15,26 @@ using serving::ShapeDetection;
 using serving::DetectionResponse;
 using serving::DetectionRequest;
 
-Status DlibShapeDetectionService::Detect(ServerContext* context, DetectionRequest *request, DetectionResponse *response) {
-  dlib::frontal_face_detector detector = dlib::get_frontal_face_detector();
+Status DlibShapeDetectionService::Detect(ServerContext* context, const DetectionRequest *request, DetectionResponse *response) {
 
-  /*
-  if (!request->image()) {
-    return grpc::Status(grpc::INVALID_ARGUMENT, "image is required.");
-  }
-  */
+  dlib::frontal_face_detector detector = dlib::get_frontal_face_detector();
 
   std::string content = request->image();
 
+  std::cerr << "reading image" << std::endl;
   auto loader = JpegLoader();
   loader.ReadImage(content);
 
+  std::cerr << "loading image" << std::endl;
   dlib::array2d<dlib::rgb_pixel> img;
   loader.GetImage(img);
 
+  std::cerr << "pyramid up image" << std::endl;
   dlib::pyramid_up(img);
 
   // Now tell the face detector to give us a list of bounding boxes
   // around all the faces in the image.
+  std::cerr << "detecting..." << std::endl;
   std::vector<dlib::rectangle> dets = detector(img);
 
   response->set_allocated_type(new std::string("objects"));

@@ -31,10 +31,10 @@ using serving::DetectionResponse;
 using serving::Object;
 using serving::Point;
 
-class FaceDetectionClient {
+class ObjectDetectionClient {
 
   public:
-    FaceDetectionClient(std::shared_ptr<Channel> channel)
+    ObjectDetectionClient(std::shared_ptr<Channel> channel)
       : stub_(serving::ObjectDetection::NewStub(channel)) { }
 
   bool DetectImageFile(const std::string& image_file) {
@@ -54,9 +54,17 @@ class FaceDetectionClient {
 
     ClientContext context;
     Status status = stub_->Detect(&context, request, &response);
+    if (status.ok()) {
+      std::cerr << "Detect rpc succeeded." << std::endl;
+    } else {
+      std::cerr << "Detect rpc failed." << std::endl;
+      std::cout << "error_code:" << status.error_code() << std::endl;
+      std::cout << "error_message:" << status.error_message() << std::endl;
+      std::cout << "error_details:" << status.error_details() << std::endl;
+      return false;
+    }
 
     std::cerr << "type: " << response.type() << std::endl;
-
     for (int i = 0; i < response.objects_size() ; i++) {
       const Object obj = response.objects(i);
       std::cerr 
@@ -66,13 +74,7 @@ class FaceDetectionClient {
       std::cerr << std::endl;
       std::cerr.flush();
     }
-    if (status.ok()) {
-      std::cerr << "Detect rpc succeeded." << std::endl;
-    } else {
-      std::cerr << "Detect rpc failed." << std::endl;
-    }
-    std::cout << status.error_details() << std::endl;
-    std::cout << status.error_message() << std::endl;
+
     return true;
   }
 
@@ -100,7 +102,8 @@ class FaceDetectionClient {
     if (status.ok()) {
       std::cerr << "Detect rpc succeeded." << std::endl;
     } else {
-      std::cerr << "Detect rpc failed." << std::endl;
+      std::cerr << "Detect rpc failed:" << status.error_message() << std::endl;
+      return false;
     }
     std::cout << status.error_details() << std::endl;
     std::cout << status.error_message() << std::endl;
@@ -113,10 +116,16 @@ class FaceDetectionClient {
 };
 
 int main(int argc, char** argv) {
-  auto channel = grpc::CreateChannel("localhost:50051", grpc::InsecureChannelCredentials());
-  auto client = FaceDetectionClient(channel);
+    auto channel = grpc::CreateChannel("localhost:50051", grpc::InsecureChannelCredentials());
+    auto client = ObjectDetectionClient(channel);
 
-  client.DetectImageFile("dlib/examples/faces/2007_007763.jpg");
-  // client.DetectImage(bytes);
+    auto image_file = "dlib/examples/faces/2007_007763.jpg";
+
+    std::ifstream file(image_file, std::ios::binary);
+    std::ostringstream ostrm;
+    ostrm << file.rdbuf();
+    std::string bytes = ostrm.str();
+    client.DetectImage(bytes);
+    // client.DetectImageStream(bytes);
   return 0;
 }

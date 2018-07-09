@@ -23,11 +23,11 @@ using grpc::ServerReader;
 using grpc::ServerWriter;
 using grpc::Status;
 
-using serving::ShapeDetection;
+using serving::ObjectDetection;
 using serving::DetectionResponse;
 using serving::DetectionRequest;
 
-class DlibShapeDetectionService final : public ShapeDetection::Service {
+class DlibShapeDetectionService final : public ObjectDetection::Service {
   public:
     explicit DlibShapeDetectionService(const std::string& model_file) {
       model_file_ = model_file;
@@ -35,7 +35,7 @@ class DlibShapeDetectionService final : public ShapeDetection::Service {
       dlib::deserialize(model_file_) >> sp_;
     }
 
-    Status Detect(ServerContext* context, DetectionRequest *request, DetectionResponse *response);
+    virtual grpc::Status Detect(ServerContext* context, const DetectionRequest *request, DetectionResponse *response);
 
   private:
     std::string model_file_;

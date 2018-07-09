@@ -24,7 +24,7 @@ class DlibFaceDetectionService final : public ObjectDetection::Service {
   DlibFaceDetectionService();
 
   // using ObjectDetection::Service::Detect;
-  virtual grpc::Status DetectStream(grpc::ServerContext* context, const DetectionRequest* request, DetectionResponse *response);
+  virtual grpc::Status Detect(grpc::ServerContext* context, const DetectionRequest* request, DetectionResponse *response);
 
  private:
   dlib::frontal_face_detector detector_;
