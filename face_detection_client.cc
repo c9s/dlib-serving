@@ -71,6 +71,13 @@ class ObjectDetectionClient {
         << "Found face box at: (" << obj.box().x() << "," << obj.box().y() << ")"
         << " size: " << obj.box().width() << "x" << obj.box().height();
 
+      if (obj.has_shape()) {
+        std::cerr 
+          << " content type:" << obj.shape().contenttype()
+          << " series size:" << obj.shape().series_size()
+          ;
+      }
+
       std::cerr << std::endl;
       std::cerr.flush();
     }
