@@ -27,6 +27,7 @@ using grpc::Status;
 
 using serving::ObjectDetection;
 using serving::DetectionRequest;
+using serving::DetectionResponse;
 using serving::Object;
 using serving::Point;
 
@@ -49,13 +50,46 @@ class FaceDetectionClient {
     request.set_allocated_image(new std::string(image));
     request.clear_region();
 
+    DetectionResponse response;
+
+    ClientContext context;
+    Status status = stub_->Detect(&context, request, &response);
+
+    for (int i = 0; i < response.objects_size() ; i++) {
+      const Object obj = response.objects(i);
+      std::cerr 
+        << "Found rect at: (" << obj.box().x() << "," << obj.box().y() << ")"
+        << " size: " << obj.box().width() << "x" << obj.box().height()
+        << std::endl;
+      std::cerr.flush();
+    }
+    if (status.ok()) {
+      std::cerr << "Detect rpc succeeded." << std::endl;
+    } else {
+      std::cerr << "Detect rpc failed." << std::endl;
+    }
+    std::cout << status.error_details() << std::endl;
+    std::cout << status.error_message() << std::endl;
+    return true;
+  }
+
+
+
+  bool DetectImageStream(const std::string& image) {
+    DetectionRequest request;
+    request.set_allocated_image(new std::string(image));
+    request.clear_region();
+
     ClientContext context;
     std::unique_ptr<ClientReader<Object> > reader(
         stub_->DetectStream(&context, request));
 
     Object obj;
     while (reader->Read(&obj)) {
-      std::cerr << "Found rect: " << obj.box().x() << "x" << obj.box().y() << " at " << std::endl;
+      std::cerr 
+        << "Found rect at: (" << obj.box().x() << "," << obj.box().y() << ")"
+        << " size: " << obj.box().width() << "x" << obj.box().height()
+        << std::endl;
       std::cerr.flush();
     }
 

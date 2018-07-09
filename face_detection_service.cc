@@ -60,13 +60,18 @@ Status DlibFaceDetectionService::DetectStream(ServerContext* context, const Dete
   std::cerr << "detecting" << std::endl;
   std::vector<dlib::rectangle> dets = detector_(img);
 
+  response->set_type("objects");
+
   for (const dlib::rectangle & det : dets) {
     std::cout << "found face at " << det << std::endl;
-    Rectangle *rect = response->add_rectangles();
-    rect->set_x(det.left());
-    rect->set_y(det.top());
-    rect->set_width(det.width());
-    rect->set_height(det.height());
+    Object *object = response->add_objects();
+
+    Rectangle *box = new Rectangle;
+    box->set_x(det.left());
+    box->set_y(det.top());
+    box->set_width(det.width());
+    box->set_height(det.height());
+    object->set_allocated_box(box);
   }
 
   return Status::OK;
