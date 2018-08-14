@@ -25,6 +25,7 @@ void RunServer(const std::string& server_address, const std::string& model_file)
   DlibShapeDetectionService service(model_file);
 
   ServerBuilder builder;
+  builder.SetMaxReceiveMessageSize(8 * 1024 * 1024);
   builder.AddListeningPort(server_address, grpc::InsecureServerCredentials());
   builder.RegisterService(&service);
   std::unique_ptr<Server> server(builder.BuildAndStart());

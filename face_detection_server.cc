@@ -29,6 +29,7 @@ const int DEFAULT_TCP_PORT = 50001;
 void RunServer(const std::string& server_address) {
   DlibFaceDetectionService service;
   ServerBuilder builder;
+  builder.SetMaxReceiveMessageSize(8 * 1024 * 1024);
   builder.AddListeningPort(server_address, grpc::InsecureServerCredentials());
   builder.RegisterService(&service);
 
