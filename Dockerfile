@@ -2,18 +2,18 @@ FROM yoanlin/alpine-boost-dev:edge
 
 RUN apk update \
     && apk add --no-cache git \
-       cmake \
-       g++ \
-       make \
-       jpeg jpeg-dev \
-       libpng libpng-dev \
-       giflib-dev \
-       boost-dev \
-       openblas-dev  \
-       ca-certificates wget \
+    cmake \
+    g++ \
+    make \
+    jpeg jpeg-dev \
+    libpng libpng-dev \
+    giflib-dev \
+    boost-dev \
+    openblas-dev  \
+    ca-certificates wget \
     && rm -rf /var/cache/apk/*
 
- # && rm -rf /var/cache/apk/*
+# && rm -rf /var/cache/apk/*
 
 # FROM yoanlin/dlib:latest
 
@@ -34,7 +34,7 @@ ENV LANG C.UTF-8
 
 RUN apk add --progress zip zlib jpeg libpng openblas boost libcrypto1.0 libssl1.0 protobuf
 RUN apk add --progress libstdc++
-RUN apk add --progress --update git make g++ unzip autoconf automake libtool file openssl curl
+RUN apk add --progress --update git make g++ unzip autoconf automake libtool file libressl curl
 
 ARG GRPC_VERSION=v1.12.x
 RUN git clone --depth 1 --branch $GRPC_VERSION https://github.com/grpc/grpc /tmp/grpc
@@ -53,13 +53,13 @@ RUN ln -s /usr/local/lib/libgrpc++.so /usr/local/lib/libgrpc++.so.1
 
 RUN wget -c -q https://github.com/davisking/dlib/archive/master.tar.gz
 RUN tar xvf master.tar.gz \
- && mv dlib-master dlib \
- && (mkdir -p dlib/build \
+    && mv dlib-master dlib \
+    && (mkdir -p dlib/build \
     && cd dlib/build \
     && cmake -DDLIB_PNG_SUPPORT=ON -DDLIB_GIF_SUPPORT=ON -DDLIB_JPEG_SUPPORT=ON .. \
     && cmake --build . --config Release \
     && make install \
- ) && rm master.tar.gz && rm -rf /dlib/build
+    ) && rm master.tar.gz && rm -rf /dlib/build
 
 RUN mkdir /src
 COPY *.cc /src/
@@ -76,7 +76,7 @@ RUN curl -O https://storage.googleapis.com/dlib-models/shape_predictor_5_face_la
 FROM alpine:edge
 WORKDIR /
 RUN apk update \
- && apk add --no-cache giflib \
+    && apk add --no-cache giflib \
     jpeg \
     libjpeg-turbo \
     libpng \
@@ -84,7 +84,7 @@ RUN apk update \
     boost-program_options \
     boost-filesystem \
     openblas
-RUN apk add libcrypto1.0 libssl1.0 protobuf libstdc++ openssl
+RUN apk add libcrypto1.0 libssl1.0 protobuf libstdc++ libressl
 RUN rm -rf /usr/local
 COPY --from=0 /usr/local/ /usr/local/
 COPY --from=0 /build/*.dat /
