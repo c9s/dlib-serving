@@ -21,6 +21,7 @@ spec:
       containers:
       - name: server
         image: yoanlin/dlib-serving:latest
+        imagePullPolicy: Always
         command: ["/shape-detection-server"]
         resources:
           requests:
